@@ -3,6 +3,7 @@ package com.example.bettingGame.core.service;
 import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.repository.TeamRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -15,7 +16,10 @@ public class TeamService {
         this.teamRepository = teamRepository;
     }
 
-    public List<Team> getAllTeamsByName(String name) {
+    public List<Team> getTeamByName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            return teamRepository.findAll();
+        }
         return teamRepository.findAllByName(name);
     }
 }

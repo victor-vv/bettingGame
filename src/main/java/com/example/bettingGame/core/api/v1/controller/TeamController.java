@@ -24,7 +24,7 @@ public class TeamController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success")
     })
-    public List<Team> getInfo(@RequestParam String name) {
-        return teamService.getAllTeamsByName(name);
+    public List<Team> getTeamInfo(@RequestParam(required = false) String name) {
+        return teamService.getTeamByName(name);
     }
 }
