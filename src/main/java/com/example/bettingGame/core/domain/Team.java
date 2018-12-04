@@ -14,7 +14,7 @@ public class Team {
     @SequenceGenerator(name = "teams_sequence", sequenceName = "teams_seq")
     @GeneratedValue(generator = "teams_sequence")
     @Column(name = "TEAM_ID")
-    private int id;
+    private Long id;
 
     @Column(name = "TEAM_NAME", nullable = false)
     private String name;
