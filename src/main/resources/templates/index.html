@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Application</title>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+</head>
+<body>
+
+
+<!--<div-->
+
+    <!--<input type="button" name="getTeam" id="getTeam" value="GET TEAM" onclick="getTeamFromApi();"/>-->
+    <!--<input type="text" name="teamRequested" id="teamRequested"/>-->
+    <!--<input type="text" name="teamId" id="teamId"/>-->
+    <!--<input type="text" name="teamName" id="teamName"/>-->
+    <!--<input type="text" name="teamCity" id="teamCity"/>-->
+
+    <input type="button" name="getTeam" id="fillTable" value="Fill the table" onclick="getTeamFromApi();"/>
+    <label for="tourNumber">"Tour number"</label>
+    <input type="text" name="tourNumber" id="tourNumber"/>
+<div>
+    <table>
+        <tr style="vertical-align: top;">
+            <td>
+                <div>
+                    <table id="teams_table" border="1">
+                        <tr>
+                            <td>N</td>
+                            <td>Team name</td>
+                            <td>Team city</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <table id="current_tour_table" border="1">
+                        <tr>
+                            <td>N</td>
+                            <td>Home team</td>
+                            <td>Away team</td>
+                            <td>Home team score</td>
+                            <td>Away team score</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.ajax({
+            url: "/v1/team?name=",
+            type: "GET",
+            success: function(data) {
+                $(function () {
+                    $.each(data, function(i, item) {
+                        var $tr = $('<tr>').append(
+                            $('<td>').text(item.id),
+                            $('<td>').text(item.name),
+                            $('<td>').text(item.city)
+                        ).appendTo('#teams_table');
+                    })
+                })
+            },
+            error: function(data){
+
+            }
+        })
+    });
+
+
+        function getTeamFromApi() {
+            var id = $("#teamRequested").val();
+            console.log("id = " + id);
+            $.ajax({
+                url: "/v1/team?name=" + id,
+                type: "GET",
+                success: function(data) {
+                    console.log("Got team: Id=" + data[0].id + ", name = " + data[0].name + ", city = " + data[0].city);
+                    $("#teamId").val(data[0].id);
+                    $("#teamName").val(data[0].name);
+                    $("#teamCity").val(data[0].city);
+                },
+                error: function(data){
+                    $("#teamId").val("n/a");
+                    $("#teamName").val("n/a");
+                    $("#teamCity").val("n/a");
+                }
+            })
+        }
+    </script>
+</body>
+</html>
