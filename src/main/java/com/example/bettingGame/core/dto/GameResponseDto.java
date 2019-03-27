@@ -6,11 +6,12 @@ import java.util.Date;
 
 @Getter @Setter @ToString @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class GameDto {
+public class GameResponseDto {
 
     private Long id;
     private Date date;
-    private Long homeTeamId;
-    private Long awayTeamId;
-    private Long tour;
+    private TeamDto homeTeam;
+    private TeamDto awayTeam;
+    private boolean finished;
+    private String tournament;
 }

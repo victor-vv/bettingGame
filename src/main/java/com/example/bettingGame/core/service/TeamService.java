@@ -21,7 +21,6 @@ public class TeamService {
     }
 
     public List<Team> getTeamByName(String name) {
-        GameDetailsBean result = gameRepository.getGameDetails(1L);
         if (StringUtils.isEmpty(name)) {
             return teamRepository.findAll();
         }

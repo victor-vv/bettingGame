@@ -13,4 +13,9 @@ public class PortalController {
         return "index";
     }
 
+
+    @RequestMapping(value = "/adminka")
+    public String indexPage() {
+        return "adminka";
+    }
 }

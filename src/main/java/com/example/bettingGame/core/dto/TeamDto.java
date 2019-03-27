@@ -8,7 +8,7 @@ import java.util.Date;
 @NoArgsConstructor @AllArgsConstructor
 public class TeamDto {
 
-    private long id;
+    private Long id;
     private String name;
     private String city;
 }

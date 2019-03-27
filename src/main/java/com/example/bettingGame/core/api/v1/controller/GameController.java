@@ -2,10 +2,10 @@ package com.example.bettingGame.core.api.v1.controller;
 
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.service.GameService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/game")
@@ -20,5 +20,15 @@ public class GameController {
     @GetMapping
     public GameDto getGameById(@RequestParam(required = false) long gameId) {
         return gameService.getGameById(gameId);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully saved"),
+            @ApiResponse(code = 400, message = "Bad request")
+    })
+    public void createGame(@RequestBody GameDto gameDto) {
+        gameService.createGame(gameDto);
     }
 }

@@ -13,8 +13,7 @@ import java.util.Date;
 public class Game {
 
     @Id
-    @SequenceGenerator(name = "games_sequence", sequenceName = "games_seq")
-    @GeneratedValue(generator = "games_sequence")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "GAME_ID")
     private Long id;
 
@@ -45,4 +44,6 @@ public class Game {
     @Column(name = "GAME_FINISHED")
     private short finished;
 
+    @Column(name = "GAME_TOUR")
+    private Long tour;
 }

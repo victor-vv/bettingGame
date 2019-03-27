@@ -50,6 +50,21 @@
         </tr>
     </table>
 </div>
+<table>
+    <tr>
+        <td>
+            Home team:
+        </td>
+        <td>
+            <select id="home_team_id">
+                <!--<option>Spartak</option>-->
+                <!--<option>Lokomotiv</option>-->
+                <!--<option>CSKA</option>-->
+
+            </select>
+        </td>
+    </tr>
+</table>
 
 
 
@@ -77,6 +92,39 @@
             }
         })
     });
+
+    $.ajax({
+        type: "GET",
+        url: "/v1/team",
+        success: function(data)
+        {
+            debugger;
+            helpers.buildDropdown(
+                data,
+                $('#home_team_id'),
+                'Select an option'
+            );
+        }
+    });
+
+    var helpers =
+        {
+            buildDropdown: function(result, dropdown, emptyMessage)
+            {
+                // Remove current options
+                dropdown.html('');
+                // Add the empty option with the empty message
+                dropdown.append('<option value="">' + emptyMessage + '</option>');
+                debugger;
+                if(result !== '')
+                {
+                    // Loop through each of the results and append the option to the dropdown
+                    $.each(result, function(k, v) {
+                        dropdown.append('<option value="' + v.id + '">' + v.name + '</option>');
+                    });
+                }
+            }
+        };
 
 
         function getTeamFromApi() {
