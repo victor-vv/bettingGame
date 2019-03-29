@@ -5,6 +5,7 @@ import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.domain.Tournament;
 import com.example.bettingGame.core.domain.custom.GameDetailsBean;
 import com.example.bettingGame.core.dto.GameDto;
+import com.example.bettingGame.core.dto.GameResponseDto;
 import com.example.bettingGame.core.dto.TeamDto;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
@@ -15,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GameService {
@@ -33,9 +35,12 @@ public class GameService {
         this.conversionService = conversionService;
     }
 
-    public GameDto getGameById(long gameId) {
-        Game game = gameRepository.findById(gameId).orElseThrow(EntityNotFoundException::new);
-        return conversionService.convert(game, GameDto.class);
+    public List<GameResponseDto> getGameByTour(long tourNumber) {
+
+        List<Game> games = gameRepository.findByTour(tourNumber);
+        return games.stream()
+                .map(game -> conversionService.convert(game, GameResponseDto.class))
+                .collect(Collectors.toList());
     }
 
     public void createGame(GameDto gameDto) {
@@ -50,7 +55,7 @@ public class GameService {
                 .tournament(tournament)
                 .date(gameDto.getDate())
                 .finished(new Short("0"))
-                .tour(gameDto.getTour())
+                .tour(gameDto.getTourNumber())
                 .build();
         gameRepository.save(game);
     }

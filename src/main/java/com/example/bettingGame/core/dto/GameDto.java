@@ -12,5 +12,5 @@ public class GameDto {
     private Date date;
     private Long homeTeamId;
     private Long awayTeamId;
-    private Long tour;
+    private Long tourNumber;
 }

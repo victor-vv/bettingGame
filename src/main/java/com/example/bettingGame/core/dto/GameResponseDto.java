@@ -14,4 +14,5 @@ public class GameResponseDto {
     private TeamDto awayTeam;
     private boolean finished;
     private String tournament;
+    private Long tourNumber;
 }

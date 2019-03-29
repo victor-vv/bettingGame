@@ -17,30 +17,36 @@
     <!--<input type="text" name="teamName" id="teamName"/>-->
     <!--<input type="text" name="teamCity" id="teamCity"/>-->
 
-    <input type="button" name="getTeam" id="fillTable" value="Fill the table" onclick="getTeamFromApi();"/>
-    <label for="tourNumber">"Tour number"</label>
-    <input type="text" name="tourNumber" id="tourNumber"/>
+    <label for="tourNumber">Tour number</label>
+    <input type="text" id="tourNumber"/>
+    <input type="button" id="fillTable" value="Bring the games" onclick="fillGamesTable()"/>
+
 <div>
     <table>
         <tr style="vertical-align: top;">
+            <!--<td>-->
+                <!--<div>-->
+                    <!--<table id="teams_table" border="1">-->
+                        <!--<tr>-->
+                            <!--<td>N</td>-->
+                            <!--<td>Team name</td>-->
+                            <!--<td>Team city</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                <!--</div>-->
+            <!--</td>-->
             <td>
                 <div>
-                    <table id="teams_table" border="1">
+                    <table id="games_table" border="1">
                         <tr>
-                            <td>N</td>
-                            <td>Team name</td>
-                            <td>Team city</td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-            <td>
-                <div>
-                    <table id="current_tour_table" border="1">
-                        <tr>
-                            <td>N</td>
+                            <!--<td>N</td>-->
+                            <td>Date</td>
+                            <td style="display:none"></td>
                             <td>Home team</td>
+                            <td style="display:none"></td>
                             <td>Away team</td>
+                            <td>Home team bet</td>
+                            <td>Away team bet</td>
                             <td>Home team score</td>
                             <td>Away team score</td>
                         </tr>
@@ -50,82 +56,68 @@
         </tr>
     </table>
 </div>
-<table>
-    <tr>
-        <td>
-            Home team:
-        </td>
-        <td>
-            <select id="home_team_id">
-                <!--<option>Spartak</option>-->
-                <!--<option>Lokomotiv</option>-->
-                <!--<option>CSKA</option>-->
-
-            </select>
-        </td>
-    </tr>
-</table>
-
-
-
-
-
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $.ajax({
-            url: "/v1/team?name=",
-            type: "GET",
-            success: function(data) {
-                $(function () {
-                    $.each(data, function(i, item) {
-                        var $tr = $('<tr>').append(
-                            $('<td>').text(item.id),
-                            $('<td>').text(item.name),
-                            $('<td>').text(item.city)
-                        ).appendTo('#teams_table');
-                    })
-                })
-            },
-            error: function(data){
-
-            }
-        })
-    });
-
-    $.ajax({
-        type: "GET",
-        url: "/v1/team",
-        success: function(data)
-        {
-            debugger;
-            helpers.buildDropdown(
-                data,
-                $('#home_team_id'),
-                'Select an option'
-            );
-        }
-    });
-
     var helpers =
         {
-            buildDropdown: function(result, dropdown, emptyMessage)
-            {
-                // Remove current options
-                dropdown.html('');
-                // Add the empty option with the empty message
-                dropdown.append('<option value="">' + emptyMessage + '</option>');
-                debugger;
-                if(result !== '')
-                {
-                    // Loop through each of the results and append the option to the dropdown
-                    $.each(result, function(k, v) {
-                        dropdown.append('<option value="' + v.id + '">' + v.name + '</option>');
-                    });
-                }
-            }
-        };
 
+        };
+        $(document).ready(
+            function() {
+                $('#tourNumber').keyup(function(e){
+                    if(e.keyCode === 13) {
+                        $('#fillTable').click();
+                        return false;
+                    }
+                });
+            }
+        );
+
+        function fillGamesTable() {
+            var $gamesTable = $("#games_table");
+            var tourNumber = $("#tourNumber").val();
+            $.ajax({
+                url: "v1/game?tourNumber=" + tourNumber,
+                type: "GET",
+                success: function(data) {
+                    //clearing the table
+                    $gamesTable.find("tr:gt(0)").remove();
+                    debugger;
+                    if (data.length === 0) {
+                        $('<tr>').append($('<td>').text("No games found")).appendTo('#games_table');
+                        return;
+                    }
+                    $.each(data, function(i, item) {
+                        $('<tr>').append(
+                            $('<td>').text(item.date),
+                            $('<td>').addClass('homeTeamIdCell').text(item.homeTeam.id).hide(),
+                            $('<td>').addClass('homeTeamNameCell').text(item.homeTeam.name),
+                            $('<td>').addClass('awayTeamIdCell').text(item.awayTeam.id).hide(),
+                            $('<td>').addClass('awayTeamNameCell').text(item.awayTeam.name),
+                            $('<td>').addClass('homeTeamBetCell').text("").attr('contenteditable', 'true'),
+                            $('<td>').addClass('awayTeamBetCell').text("").attr('contenteditable', 'true'),
+                            $('<td>').addClass('homeTeamScoreCell').text(""),
+                            $('<td>').addClass('awayTeamScoreCell').text("")
+                        ).appendTo('#games_table');
+                    })
+                },
+                failure: function() {
+                    $gamesTable.find("tr:gt(0)").remove();
+                    //TODO:
+                }
+        }
+            );
+            var homeRow = [];
+            var awayRow = [];
+            $gamesTable.find('tr').each(function() {
+                var homeTeam = $(this).find(".homeTeamNameCell").html();
+                var awayTeam = $(this).find(".awayTeamIdCell").html();
+                homeRow.push($(homeTeam).text());
+                awayRow.push($(awayTeam).text());
+            });
+            console.log('homeRow : ', homeRow);
+            console.log('awayRow : ', awayRow);
+        }
 
         function getTeamFromApi() {
             var id = $("#teamRequested").val();

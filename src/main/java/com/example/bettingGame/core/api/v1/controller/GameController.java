@@ -1,11 +1,14 @@
 package com.example.bettingGame.core.api.v1.controller;
 
 import com.example.bettingGame.core.dto.GameDto;
+import com.example.bettingGame.core.dto.GameResponseDto;
 import com.example.bettingGame.core.service.GameService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/game")
@@ -18,8 +21,8 @@ public class GameController {
     }
 
     @GetMapping
-    public GameDto getGameById(@RequestParam(required = false) long gameId) {
-        return gameService.getGameById(gameId);
+    public List<GameResponseDto> getGameByTour(@RequestParam long tourNumber) {
+        return gameService.getGameByTour(tourNumber);
     }
 
     @PostMapping

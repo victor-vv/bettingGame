@@ -15,17 +15,9 @@ public class GameDtoConverter implements Converter<Game, GameDto> {
         return GameDto.builder()
                 .id(source.getId())
                 .date(source.getDate())
-//                .homeTeam(buildTeamDto(source.getHomeTeam()))
-//                .awayTeam(buildTeamDto(source.getAwayTeam()))
-//                .finished(source.getFinished() == 1)
-//                .tournament(source.getTournament().getName())
-                .build();
-    }
-
-    private TeamDto buildTeamDto(Team team) {
-        return TeamDto.builder().id(team.getId())
-                .name(team.getName())
-                .city(team.getCity())
+                .homeTeamId(source.getHomeTeamId())
+                .awayTeamId(source.getAwayTeamId())
+                .tourNumber(source.getTour())
                 .build();
     }
 }
