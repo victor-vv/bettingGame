@@ -3,16 +3,13 @@ package com.example.bettingGame.core.service;
 import com.example.bettingGame.core.domain.Game;
 import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.domain.Tournament;
-import com.example.bettingGame.core.domain.custom.GameDetailsBean;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
-import com.example.bettingGame.core.dto.TeamDto;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
 import com.example.bettingGame.core.repository.TournamentRepository;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -35,7 +32,7 @@ public class GameService {
         this.conversionService = conversionService;
     }
 
-    public List<GameResponseDto> getGameByTour(long tourNumber) {
+    public List<GameResponseDto> getGamesByTour(long tourNumber) {
 
         List<Game> games = gameRepository.findByTour(tourNumber);
         return games.stream()
@@ -55,7 +52,7 @@ public class GameService {
                 .tournament(tournament)
                 .date(gameDto.getDate())
                 .finished(new Short("0"))
-                .tour(gameDto.getTourNumber())
+                .tour(gameDto.getTour())
                 .build();
         gameRepository.save(game);
     }

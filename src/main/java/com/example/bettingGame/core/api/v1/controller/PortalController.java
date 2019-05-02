@@ -9,13 +9,13 @@ public class PortalController {
 
 
     @RequestMapping(value = "/index")
-    public String IndexPage() {
+    public String indexPage() {
         return "index";
     }
 
 
     @RequestMapping(value = "/adminka")
-    public String indexPage() {
+    public String adminPage() {
         return "adminka";
     }
 }

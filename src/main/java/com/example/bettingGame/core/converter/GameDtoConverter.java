@@ -1,12 +1,11 @@
 package com.example.bettingGame.core.converter;
 
 import com.example.bettingGame.core.domain.Game;
-import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.dto.GameDto;
-import com.example.bettingGame.core.dto.TeamDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
+//TODO: remove, not needed. GameResponseDtoConverter instead
 @Component
 public class GameDtoConverter implements Converter<Game, GameDto> {
 
@@ -17,7 +16,7 @@ public class GameDtoConverter implements Converter<Game, GameDto> {
                 .date(source.getDate())
                 .homeTeamId(source.getHomeTeamId())
                 .awayTeamId(source.getAwayTeamId())
-                .tourNumber(source.getTour())
+                .tour(source.getTour())
                 .build();
     }
 }

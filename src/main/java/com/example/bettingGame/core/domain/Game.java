@@ -5,6 +5,7 @@ import org.hibernate.type.descriptor.sql.TinyIntTypeDescriptor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
@@ -46,4 +47,7 @@ public class Game {
 
     @Column(name = "GAME_TOUR")
     private Long tour;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    private Set<Bet> bets;
 }

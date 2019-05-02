@@ -8,9 +8,9 @@ import java.util.Date;
 @NoArgsConstructor @AllArgsConstructor
 public class GameDto {
 
-    private Long id;
+    private Long id; //TODO: not needed, remove?
     private Date date;
     private Long homeTeamId;
     private Long awayTeamId;
-    private Long tourNumber;
+    private Long tour;
 }
