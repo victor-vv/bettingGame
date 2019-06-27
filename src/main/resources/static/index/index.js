@@ -16,9 +16,42 @@ $(document).ready(
 function fillGamesTable() {
     var $gamesTable = $("#games_table");
     var tourNumber = $("#tourNumber").val();
+
+    function formatDate(date) {
+        debugger;
+        date = new Date(date);
+        var HH = date.getHours();
+        var MM = date.getMinutes();
+        var dd = date.getDate();
+        var mm = date.getMonth() + 1;
+        var yyyy = date.getFullYear();
+
+
+        if (MM < 10) {
+            MM = '0' + MM;
+        }
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        var weekday = new Array(7);
+        weekday[0] = "ВС";
+        weekday[1] = "ПН";
+        weekday[2] = "ВТ";
+        weekday[3] = "СР";
+        weekday[4] = "ЧТ";
+        weekday[5] = "ПТ";
+        weekday[6] = "СБ";
+        var day = weekday[date.getDay()];
+        return dd+'/'+mm+'/'+yyyy+' - ' +HH+':'+MM+' ('+day+')';
+    }
+
     $.ajax({
-            url: "v1/game?tourNumber=" + tourNumber,
-            type: "GET",
+        url: "v1/game?tourNumber=" + tourNumber,
+        type: "GET",
             success: function(data) {
                 //clearing the table
                 $gamesTable.find("tr:gt(0)").remove();
@@ -27,9 +60,10 @@ function fillGamesTable() {
                     return;
                 }
                 $.each(data, function(i, item) {
+                    var formattedDate = formatDate(item.date);
                     $('<tr id="games_table_line">').append(
                         $('<td>').addClass('gameIdCell').text(item.id).hide(),
-                        $('<td>').addClass('gameDateCell').text(item.date),
+                        $('<td>').addClass('gameDateCell').text(formattedDate),
                         $('<td>').addClass('homeTeamIdCell').text(item.homeTeam.id).hide(),
                         $('<td>').addClass('homeTeamNameCell').text(item.homeTeam.name),
                         $('<td>').addClass('awayTeamIdCell').text(item.awayTeam.id).hide(),
@@ -48,6 +82,7 @@ function fillGamesTable() {
         }
     );
 }
+
 
 function saveBets() {
     var gamesTable = $("#games_table");
