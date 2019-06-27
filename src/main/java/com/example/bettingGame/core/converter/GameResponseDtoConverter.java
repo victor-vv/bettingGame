@@ -24,6 +24,8 @@ public class GameResponseDtoConverter implements Converter<Game, GameResponseDto
                 .awayTeam(buildTeamDto(source.getAwayTeam()))
                 .finished(source.getFinished() == 1)
                 .tourNumber(source.getTour())
+                .homeTeamScore(source.getHomeTeamScore())
+                .awayTeamScore(source.getAwayTeamScore())
                 .build();
     }
 

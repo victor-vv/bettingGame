@@ -22,7 +22,7 @@ public class GameController {
 
     @GetMapping
     public List<GameResponseDto> getGamesByTour(@RequestParam long tourNumber) {
-        return gameService.getGamesByTour(tourNumber);
+        return gameService.getGamesByTour(tourNumber, 1);
     }
 
     @PostMapping

@@ -1,10 +1,12 @@
 package com.example.bettingGame.core.service;
 
+import com.example.bettingGame.core.domain.Bet;
 import com.example.bettingGame.core.domain.Game;
 import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.domain.Tournament;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
+import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
 import com.example.bettingGame.core.repository.TournamentRepository;
@@ -20,23 +22,25 @@ public class GameService {
 
     private GameRepository gameRepository;
     private TeamRepository teamRepository;
+    private BetRepository betRepository;
     private TournamentRepository tournamentRepository;
     private ConversionService conversionService;
 
     public GameService(GameRepository gameRepository, TeamRepository teamRepository,
-                       TournamentRepository tournamentRepository,
+                       BetRepository betRepository, TournamentRepository tournamentRepository,
                        ConversionService conversionService) {
         this.gameRepository = gameRepository;
         this.teamRepository = teamRepository;
+        this.betRepository = betRepository;
         this.tournamentRepository = tournamentRepository;
         this.conversionService = conversionService;
     }
 
-    public List<GameResponseDto> getGamesByTour(long tourNumber) {
+    public List<GameResponseDto> getGamesByTour(long tourNumber, long userId) {
 
         List<Game> games = gameRepository.findByTour(tourNumber);
         return games.stream()
-                .map(game -> conversionService.convert(game, GameResponseDto.class))
+                .map(game -> convert(game, userId))
                 .collect(Collectors.toList());
     }
 
@@ -55,5 +59,18 @@ public class GameService {
                 .tour(gameDto.getTour())
                 .build();
         gameRepository.save(game);
+    }
+
+    private GameResponseDto convert(Game game, long userId) {
+        GameResponseDto response = conversionService.convert(game, GameResponseDto.class);
+        betRepository.findByGameIdAndUserId(game.getId(), userId).ifPresent(bet -> addBetDetails(response, bet));
+        response.setUserId(userId);
+        return response;
+    }
+
+    private GameResponseDto addBetDetails(GameResponseDto response, Bet bet) {
+        response.setHomeTeamBet(bet.getHomeTeamScore());
+        response.setAwayTeamBet(bet.getAwayTeamScore());
+        return response;
     }
 }
