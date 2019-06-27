@@ -47,9 +47,9 @@ public class GameService {
     public void createGame(GameDto gameDto) {
         // todo: check for duplicates (same teams with same date ???)
         // todo: logging ???
-        Team homeTeam = teamRepository.findById(gameDto.getHomeTeamId()).orElseThrow(() -> new EntityNotFoundException("The home team does not exist"));
-        Team awayTeam = teamRepository.findById(gameDto.getAwayTeamId()).orElseThrow(() -> new EntityNotFoundException("The away team does not exist"));
-        Tournament tournament = tournamentRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("The home team does not exist"));
+        Team homeTeam = teamRepository.findById(gameDto.getHomeTeamId()).orElseThrow(() -> new EntityNotFoundException("Home team does not exist"));
+        Team awayTeam = teamRepository.findById(gameDto.getAwayTeamId()).orElseThrow(() -> new EntityNotFoundException("Away team does not exist"));
+        Tournament tournament = tournamentRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("Tournament does not exist"));
         Game game = Game.builder()
                 .homeTeam(homeTeam)
                 .awayTeam(awayTeam)
