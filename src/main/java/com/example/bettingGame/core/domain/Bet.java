@@ -30,5 +30,5 @@ public class Bet {
     private Integer awayTeamScore;
 
     @Column(name = "BET_USER_ID")
-    private Long user; //TODO: join User table
+    private Long userId; //TODO: join User table
 }

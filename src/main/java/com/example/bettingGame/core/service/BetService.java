@@ -23,16 +23,16 @@ public class BetService {
 
 
     public void createBet(BetDto betDto) {
-        // todo: check for duplicates (same bet ???)
         // todo: logging ???
-        // todo: check that game is not finished
-        Game game = gameRepository.findById(betDto.getGameId()).orElseThrow(() -> new EntityNotFoundException("Game doesn't exist"));
-        Bet bet = Bet.builder()
-                .game(game)
-                .homeTeamScore(betDto.getHomeTeamScore())
-                .awayTeamScore(betDto.getAwayTeamScore())
-                .user(betDto.getUserId())
-                .build();
+        // todo: check that game is not finished (validator!)
+        long gameId = betDto.getGameId();
+        long userId = betDto.getUserId();
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game doesn't exist"));
+        Bet bet = betRepository.findByGameIdAndUserId(gameId, userId).orElse(new Bet());
+        bet.setGame(game);
+        bet.setHomeTeamScore(betDto.getHomeTeamScore());
+        bet.setAwayTeamScore(betDto.getAwayTeamScore());
+        bet.setUserId(userId);
         betRepository.save(bet);
     }
 }
