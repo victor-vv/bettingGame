@@ -7,13 +7,13 @@ import javax.persistence.*;
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "TEAMS")
+@Table(name = "TEAMS", schema = "BETTINGG")
 public class Team {
 
     @Id
-    @SequenceGenerator(name = "teams_sequence", sequenceName = "teams_seq")
-    @GeneratedValue(generator = "teams_sequence")
-    @Column(name = "TEAM_ID")
+    @SequenceGenerator(name = "TEAMS_SEQUENCE", sequenceName = "BETTINGG.TEAMS_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "TEAMS_SEQUENCE")
+    @Column(name = "TEAM_ID", insertable = false, updatable = false)
     private Long id;
 
     @Column(name = "TEAM_NAME", nullable = false)

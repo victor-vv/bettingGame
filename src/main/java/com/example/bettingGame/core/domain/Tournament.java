@@ -8,13 +8,13 @@ import java.util.Set;
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "TOURNAMENTS")
+@Table(name = "TOURNAMENTS", schema = "BETTINGG")
 public class Tournament {
 
     @Id
-    @SequenceGenerator(name = "tournaments_sequence", sequenceName = "tournaments_seq")
-    @GeneratedValue(generator = "tournaments_sequence")
-    @Column(name = "TOURNAMENT_ID")
+    @SequenceGenerator(name = "TOURNAMENTS_SEQUENCE", sequenceName = "BETTINGG.GAMES_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "TOURNAMENTS_SEQUENCE")
+    @Column(name = "TOURNAMENT_ID", insertable = false, updatable = false)
     private Long id;
 
     @Column(name = "TOURNAMENT_NAME")

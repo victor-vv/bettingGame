@@ -15,13 +15,14 @@
 </div>
 <div>
     <label for="home_team">Home Team</label>
-    <select id="home_team" style="width: 80px"></select>
+    <select id="home_team" style="width: 100px"></select>
     <label for="away_team">Away Team</label>
-    <select id="away_team" style="width: 80px"></select>
+    <select id="away_team" style="width: 100px"></select>
 </div>
 <div>
     <label for="game_date">Date</label>
-    <input type="date" id="game_date" style="width: 150px;"/>
+    <input type="text" id="game_date" style="width: 250px;"/>
+    <!--<input type="date" id="game_date" style="width: 150px;"/>-->
 </div>
 <input type="button" id="create_game" value="Create game"
        onclick="helpers.createGame($('#home_team'), $('#away_team'), $('#tour_number'), $('#game_date'))"/>

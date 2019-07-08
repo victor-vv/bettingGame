@@ -12,6 +12,7 @@ import com.example.bettingGame.core.repository.TeamRepository;
 import com.example.bettingGame.core.repository.TournamentRepository;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -36,6 +37,7 @@ public class GameService {
         this.conversionService = conversionService;
     }
 
+    @Transactional
     public List<GameResponseDto> getGamesByTour(long tourNumber, long userId) {
 
         List<Game> games = gameRepository.findByTour(tourNumber);
@@ -44,6 +46,7 @@ public class GameService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void createGame(GameDto gameDto) {
         // todo: check for duplicates (same teams with same date ???)
         // todo: logging ???
@@ -55,7 +58,7 @@ public class GameService {
                 .awayTeam(awayTeam)
                 .tournament(tournament)
                 .date(gameDto.getDate())
-                .finished(new Short("0"))
+                .finished(false)
                 .tour(gameDto.getTour())
                 .build();
         gameRepository.save(game);

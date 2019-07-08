@@ -22,7 +22,7 @@ public class GameResponseDtoConverter implements Converter<Game, GameResponseDto
                 .date(source.getDate())
                 .homeTeam(buildTeamDto(source.getHomeTeam()))
                 .awayTeam(buildTeamDto(source.getAwayTeam()))
-                .finished(source.getFinished() == 1)
+                .finished(source.getFinished())
                 .tourNumber(source.getTour())
                 .homeTeamScore(source.getHomeTeamScore())
                 .awayTeamScore(source.getAwayTeamScore())
