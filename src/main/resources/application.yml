@@ -20,9 +20,12 @@ spring:
     show-sql: true
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/bettingg
-    username: postgres
-    password: 6f!v$5-F7ERz79Fn
+#    url: jdbc:postgresql://localhost:5432/bettingg
+#    username: postgres
+#    password: 6f!v$5-F7ERz79Fn
+    url: jdbc:postgresql://ec2-54-246-84-100.eu-west-1.compute.amazonaws.com:5432/d31lq3nprstf45?sslmode=require
+    username: mrzzowrhnkrjtk
+    password: f351d4973c47807ff8f66ac311b3ea39dfe6a911a27eaac1ad0b0b9135dd2ddc
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       poolName: postgresqlPool
