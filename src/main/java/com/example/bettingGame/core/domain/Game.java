@@ -1,7 +1,6 @@
 package com.example.bettingGame.core.domain;
 
 import lombok.*;
-import org.hibernate.type.descriptor.sql.TinyIntTypeDescriptor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,12 +9,13 @@ import java.util.Set;
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Entity
-@Table(name = "GAMES")
+@Table(name = "games", schema = "BETTINGG")
 public class Game {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "GAME_ID")
+    @SequenceGenerator(name = "GAMES_SEQUENCE", sequenceName = "BETTINGG.GAMES_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "GAMES_SEQUENCE")
+    @Column(name = "GAME_ID", insertable = false, updatable = false)
     private Long id;
 
     @Column(name = "GAME_TOURNAMENT_ID", insertable = false, updatable = false)
@@ -43,7 +43,7 @@ public class Game {
     private Team awayTeam;
 
     @Column(name = "GAME_FINISHED")
-    private short finished;
+    private Boolean finished;
 
     @Column(name = "GAME_HOME_TEAM_SCORE")
     private Integer homeTeamScore;
@@ -51,7 +51,7 @@ public class Game {
     @Column(name = "GAME_AWAY_TEAM_SCORE")
     private Integer awayTeamScore;
 
-    @Column(name = "GAME_TOUR")
+    @Column(name = "GAME_TOUR_ID")
     private Long tour;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
