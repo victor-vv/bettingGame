@@ -18,7 +18,6 @@ function fillGamesTable() {
     var tourNumber = $("#tourNumber").val();
 
     function formatDate(date) {
-        debugger;
         date = new Date(date);
         var HH = date.getHours();
         var MM = date.getMinutes();

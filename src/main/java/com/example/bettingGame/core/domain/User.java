@@ -18,7 +18,7 @@ import java.util.List;
 public class User implements UserDetails {
 
     @Id
-    @SequenceGenerator(name = "USERS_SEQUENCE", sequenceName = "BETTINGG.USERS_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "USERS_SEQUENCE", sequenceName = "BETTINGG.CUSTOM_USERS_SEQ", allocationSize = 1)
     @GeneratedValue(generator = "USERS_SEQUENCE")
     @Column(name = "USER_ID", insertable = false, updatable = false)
     private Long id;
