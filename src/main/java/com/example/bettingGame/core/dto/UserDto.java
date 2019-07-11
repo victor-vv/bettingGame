@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Getter @Setter @ToString @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class UserPostDto {
+public class UserDto {
 
     private String username;
     private String password;

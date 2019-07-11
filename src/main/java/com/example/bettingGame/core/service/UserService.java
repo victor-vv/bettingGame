@@ -1,7 +1,7 @@
 package com.example.bettingGame.core.service;
 
 import com.example.bettingGame.core.domain.User;
-import com.example.bettingGame.core.dto.UserPostDto;
+import com.example.bettingGame.core.dto.UserDto;
 import com.example.bettingGame.core.repository.UserRepository;
 import com.example.bettingGame.core.util.UserRole;
 import com.google.common.collect.ImmutableList;
@@ -34,10 +34,10 @@ public class UserService implements UserDetailsService {
         return existingUser;
     }
 
-    public void createUser(UserPostDto userPostDto) {
+    public void createUser(UserDto userDto) {
         User newUser = User.builder()
-                            .username(userPostDto.getUsername())
-                            .password(userPostDto.getPassword())
+                            .username(userDto.getUsername())
+                            .password(userDto.getPassword())
                             .accountNonExpired(true)
                             .accountNonLocked(true)
                             .credentialsNonExpired(true)

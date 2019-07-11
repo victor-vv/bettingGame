@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/game")
+@RequestMapping("/v1/games")
 public class GameController {
 
     private GameService gameService;

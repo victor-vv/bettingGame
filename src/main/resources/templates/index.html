@@ -7,37 +7,48 @@
     <link type="text/css" href="index/index.css" rel="stylesheet">
 </head>
 <body>
-    <label for="tourNumber">Tour number</label>
-    <input type="text" id="tourNumber"/>
-    <input type="button" id="fillTable" value="Bring the games" onclick="fillGamesTable()"/>
-<div>
-    <table>
-        <tr style="vertical-align: top;">
-            <td>
-                <div>
-                    <table id="games_table" border="1">
-                        <tr id="games_table_header">
-                            <td style="display:none"></td>
-                            <td>Дата</td>
-                            <td style="display:none"></td>
-                            <td>Дома</td>
-                            <td style="display:none"></td>
-                            <td>В гостях</td>
-                            <td>Дома ставка</td>
-                            <td>В гостях ставка</td>
-                            <td>Дома счет</td>
-                            <td>В гостях счет</td>
-                        </tr>
-                    </table>
-                </div>
-            </td>
-        </tr>
-    </table>
-</div>
-<div>
-    <input type="button" id="saveGames" value="Save games" onclick="saveBets()"/>
-</div>
+    <!--<label for="tourNumber">Tour number</label>-->
+    <!--<input type="text" id="tourNumber"/>-->
+    <!--<label for="tourNumber">Выберите тур</label>-->
 
+    <div class="row">
+        <div class="select-row-custom-css">
+            <select class="select-custom-css" id="tournamentId" style="width: 200px; margin-bottom: 5px;"></select>
+        </div>
+        <div class="select-row-custom-css">
+            <select class="select-custom-css" id="tourNumber" onchange="fillGamesTable()" style="width: 200px; margin-bottom: 5px;"></select>
+        </div>
+        <div class="select-row-custom-css" style="margin-left: 300px">
+            <p><b><span id="username"></span></b></p>
+        </div>
+    </div>
+    <div>
+        <table style="margin-bottom: 10px;">
+            <tr style="vertical-align: top;">
+                <td>
+                    <div>
+                        <table id="games_table" border="1">
+                            <tr id="games_table_header">
+                                <td style="display:none"></td>
+                                <td>Дата</td>
+                                <td style="display:none"></td>
+                                <td>Дома</td>
+                                <td style="display:none"></td>
+                                <td>В гостях</td>
+                                <td>Дома ставка</td>
+                                <td>В гостях ставка</td>
+                                <td>Дома счет</td>
+                                <td>В гостях счет</td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <input type="button" class="button-custom-css" id="saveGames" value="Сохранить ставки" onclick="saveBets()" style="width: 200px"/>
+    </div>
 <script type="text/javascript" src="index/index.js"></script>
 </body>
 </html>

@@ -64,6 +64,16 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    @Transactional
+    //TODO: перенести в правильный сервис и сделать правильно, без перебора всех игр
+    public List<Long> getTours(long tournamentId) {
+        List<Game> games = gameRepository.findByTournamentId(tournamentId);
+        return games.stream()
+                .map(Game::getTour)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
     private GameResponseDto convert(Game game, long userId) {
         GameResponseDto response = conversionService.convert(game, GameResponseDto.class);
         betRepository.findByGameIdAndUserId(game.getId(), userId).ifPresent(bet -> addBetDetails(response, bet));

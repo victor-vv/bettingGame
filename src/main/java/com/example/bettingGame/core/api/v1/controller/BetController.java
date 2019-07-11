@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/bet")
+@RequestMapping("/v1/bets")
 public class BetController {
 
     private BetService betService;

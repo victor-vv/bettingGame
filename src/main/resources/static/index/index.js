@@ -1,13 +1,43 @@
-var helpers =
-    {
-
-    };
 $(document).ready(
     function() {
         $('#tourNumber').keyup(function(e){
             if(e.keyCode === 13) {
                 $('#fillTable').click();
                 return false;
+            }
+        });
+    }
+);
+$(document).ready(
+    function() {
+        $.ajax({
+            type: "GET",
+            url: "/v1/tours?tournamentId=1",
+            success: function(data) {
+                helpers.buildSimpleIntegerDropdown(data, $('#tourNumber'), 'Выберите тур');
+            }
+        });
+    }
+);
+$(document).ready(
+    function() {
+        $.ajax({
+            type: "GET",
+            url: "/v1/tournaments",
+            success: function(data) {
+                helpers.buildDropdown(data, $('#tournamentId'), 'Выберите турнир');
+            }
+        });
+    }
+);
+$(document).ready(
+    function() {
+        $.ajax({
+            type: "GET",
+            url: "/v1/users/current",
+            success: function(data) {
+                debugger;
+                $("#username").html(data);
             }
         });
     }
@@ -49,13 +79,13 @@ function fillGamesTable() {
     }
 
     $.ajax({
-        url: "v1/game?tourNumber=" + tourNumber,
+        url: "v1/games?tourNumber=" + tourNumber,
         type: "GET",
             success: function(data) {
                 //clearing the table
                 $gamesTable.find("tr:gt(0)").remove();
                 if (data.length === 0) {
-                    $('<tr>').append($('<td>').text("No games found")).appendTo('#games_table');
+                    $('<tr>').append($('<td>').text("Нет доступных игр для введенных параметров")).appendTo('#games_table');
                     return;
                 }
                 $.each(data, function(i, item) {
@@ -69,8 +99,8 @@ function fillGamesTable() {
                         $('<td>').addClass('awayTeamNameCell').text(item.awayTeam.name),
                         $('<td>').addClass('homeTeamBetCell').text(item.homeTeamBet === null ? "" : item.homeTeamBet).attr('contenteditable', 'true'),
                         $('<td>').addClass('awayTeamBetCell').text(item.awayTeamBet === null ? "" : item.awayTeamBet).attr('contenteditable', 'true'),
-                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "-" : item.homeTeamScore),
-                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "-" : item.awayTeamScore)
+                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore),
+                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore)
                     ).appendTo('#games_table');
                 })
             },
@@ -114,7 +144,7 @@ function saveBet(gameLine) {
     };
     $.ajax({
         type: "POST",
-        url: "v1/bet",
+        url: "v1/bets",
         contentType: "application/json",
         data: JSON.stringify(betDto),
         success: function () {
@@ -123,7 +153,7 @@ function saveBet(gameLine) {
         },
         failure: function () {
             console.log("Something went wrong, the bet was not saved, try again");
-            gameLine.append($('<td>').addClass('BetSaveMessage').text("Something went wrong, the bet was not saved, try again"));
+            gameLine.append($('<td>').addClass('BetSaveMessage').text("Что-то пошло не так, попробуйте еще раз"));
         }
     })
 }
@@ -132,7 +162,7 @@ function getTeamFromApi() {
     var id = $("#teamRequested").val();
     console.log("id = " + id);
     $.ajax({
-        url: "/v1/team?name=" + id,
+        url: "/v1/teams?name=" + id,
         type: "GET",
         success: function(data) {
             console.log("Got team: Id=" + data[0].id + ", name = " + data[0].name + ", city = " + data[0].city);
@@ -147,3 +177,36 @@ function getTeamFromApi() {
         }
     })
 }
+
+var helpers =
+    {
+        buildSimpleIntegerDropdown: function(result, dropdown, emptyMessage)
+        //TODO: переделать нормально
+        {
+            // Remove current options
+            dropdown.html('');
+            // Add the empty option with the empty message
+            dropdown.append('<option value="">' + emptyMessage + '</option>');
+            if(result !== '')
+            {
+                // Loop through each of the results and append the option to the dropdown
+                $.each(result, function(k, value) {
+                    dropdown.append('<option value="' + value + '">' + 'Тур ' + value + '</option>');
+                });
+            }
+        },
+        buildDropdown: function(result, dropdown, emptyMessage)
+        {
+            // Remove current options
+            dropdown.html('');
+            // Add the empty option with the empty message
+            dropdown.append('<option value="">' + emptyMessage + '</option>');
+            if(result !== '')
+            {
+                // Loop through each of the results and append the option to the dropdown
+                $.each(result, function(k, v) {
+                    dropdown.append('<option value="' + v.id + '">' + v.name + '</option>');
+                });
+            }
+        }
+    };

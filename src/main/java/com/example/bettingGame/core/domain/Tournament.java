@@ -28,4 +28,6 @@ public class Tournament {
 
     @OneToMany(mappedBy = "tournament", fetch = FetchType.LAZY)
     private Set<Game> games;
+
+    //TODO: убрать года и поставить флаг
 }
