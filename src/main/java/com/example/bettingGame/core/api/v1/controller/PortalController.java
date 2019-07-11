@@ -19,8 +19,8 @@ public class PortalController {
         return "adminka";
     }
 
-    @RequestMapping(value = "/sign-up")
-    public String registrationPage() {
-        return "registration";
-    }
+//    @RequestMapping(value = "/sign-up")
+//    public String registrationPage() {
+//        return "registration";
+//    }
 }
