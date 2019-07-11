@@ -39,6 +39,7 @@
                                 <td>В гостях ставка</td>
                                 <td>Дома счет</td>
                                 <td>В гостях счет</td>
+                                <td>Очки</td>
                             </tr>
                         </table>
                     </div>
@@ -46,8 +47,14 @@
             </tr>
         </table>
     </div>
-    <div>
-        <input type="button" class="button-custom-css" id="saveGames" value="Сохранить ставки" onclick="saveBets()" style="width: 200px"/>
+
+    <div class="row">
+        <div class="select-row-custom-css">
+            <input type="button" class="button-custom-css" id="saveGames" value="Сохранить ставки" onclick="saveBets()" style="width: 200px"/>
+        </div>
+        <div class="select-row-custom-css">
+            <input type="button" class="button-custom-css" id="computePoints" value="Посчитать очки" onclick="computePoints()" style="width: 200px"/>
+        </div>
     </div>
 <script type="text/javascript" src="index/index.js"></script>
 </body>

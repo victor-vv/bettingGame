@@ -1,6 +1,5 @@
 $(document).ready(function() {
     $("#register").click(function() {
-        debugger;
         var name = $("#name").val();
         var password = $("#password").val();
         var cpassword = $("#cpassword").val();

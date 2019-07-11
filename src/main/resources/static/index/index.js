@@ -36,7 +36,6 @@ $(document).ready(
             type: "GET",
             url: "/v1/users/current",
             success: function(data) {
-                debugger;
                 $("#username").html(data);
             }
         });
@@ -99,8 +98,9 @@ function fillGamesTable() {
                         $('<td>').addClass('awayTeamNameCell').text(item.awayTeam.name),
                         $('<td>').addClass('homeTeamBetCell').text(item.homeTeamBet === null ? "" : item.homeTeamBet).attr('contenteditable', 'true'),
                         $('<td>').addClass('awayTeamBetCell').text(item.awayTeamBet === null ? "" : item.awayTeamBet).attr('contenteditable', 'true'),
-                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore),
-                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore)
+                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore).attr('contenteditable', 'true'),
+                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true'),
+                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true')
                     ).appendTo('#games_table');
                 })
             },
@@ -129,11 +129,40 @@ function saveBets() {
     })
 }
 
+function computePoints() {
+    var gamesTable = $("#games_table");
+    gamesTable.find('tr#games_table_line').each(function() {
+        computePointsForGame($(this))
+    })
+}
+
+function computePointsForGame(gameLine) {
+    var homeTeamBetScore = gameLine.find(".homeTeamBetCell").html();
+    var awayTeamBetScore = gameLine.find(".awayTeamBetCell").html();
+    var homeTeamFinalScore = gameLine.find(".homeTeamScoreCell").html();
+    var awayTeamFinalScore = gameLine.find(".awayTeamScoreCell").html();
+    if (!$.isNumeric(homeTeamBetScore) || !$.isNumeric(awayTeamBetScore)) {
+        gameLine.append($('<td>').addClass('BetSaveMessage').text("Ставки введены некорректно"));
+        return;
+    }
+    var pointsForGame = 0;
+    var betGoalsDif = homeTeamBetScore - awayTeamBetScore;
+    var finalScoreGoalsDif = homeTeamFinalScore - awayTeamFinalScore;
+    if ((homeTeamBetScore === homeTeamFinalScore) && (awayTeamBetScore === awayTeamFinalScore)) {
+        pointsForGame = 5;
+    } else if (betGoalsDif === finalScoreGoalsDif) {
+        pointsForGame = 3;
+    } else if ((homeTeamFinalScore !== awayTeamFinalScore) && (betGoalsDif > 0 && finalScoreGoalsDif > 0) || (betGoalsDif < 0 && finalScoreGoalsDif < 0)) {
+        pointsForGame = 2;
+    }
+    $(gameLine ).append($('<td>').addClass('betPointsCell').text(pointsForGame));
+}
+
 function saveBet(gameLine) {
     var homeTeamScore = gameLine.find(".homeTeamBetCell").html();
     var awayTeamScore = gameLine.find(".awayTeamBetCell").html();
     if (!$.isNumeric(homeTeamScore) || !$.isNumeric(awayTeamScore)) {
-        gameLine.append($('<td>').addClass('BetSaveMessage').text("Error! Please fill the bet fields!"));
+        gameLine.append($('<td>').addClass('BetSaveMessage').text("Ставки введены некорректно"));
         return;
     }
     var betDto = {
@@ -149,7 +178,7 @@ function saveBet(gameLine) {
         data: JSON.stringify(betDto),
         success: function () {
             console.log("The bet was saved");
-            $(gameLine).append($('<td>').addClass('BetSaveStatus').text("OK"));
+            gameLine.append($('<td>').addClass('BetSaveStatusCell').text("OK"));
         },
         failure: function () {
             console.log("Something went wrong, the bet was not saved, try again");
