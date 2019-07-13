@@ -3,9 +3,8 @@ package com.example.bettingGame.core.service;
 import com.example.bettingGame.core.domain.User;
 import com.example.bettingGame.core.dto.UserDto;
 import com.example.bettingGame.core.repository.UserRepository;
-import com.example.bettingGame.core.util.UserRole;
-import com.google.common.collect.ImmutableList;
 import lombok.NonNull;
+import org.hibernate.Hibernate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,14 +25,16 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        User existingUser = userRepository.findByUsername(username).orElse(null);
-        if (existingUser == null) {
-            return null;
-        }
+//        Hibernate.initialize(userRepository.findByUsername(username));
+        User existingUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         existingUser.setPassword(encoder.encode(existingUser.getPassword()));
         return existingUser;
     }
 
+    /**
+     *
+     * @param userDto
+     */
     public void createUser(UserDto userDto) {
         User newUser = User.builder()
                             .username(userDto.getUsername())
@@ -42,7 +43,7 @@ public class UserService implements UserDetailsService {
                             .accountNonLocked(true)
                             .credentialsNonExpired(true)
                             .enabled(true)
-                            .authorities(ImmutableList.of(UserRole.USER))
+//                            .authorities(ImmutableList.of(UserRole.USER))
                             .build();
         userRepository.save(newUser);
     }

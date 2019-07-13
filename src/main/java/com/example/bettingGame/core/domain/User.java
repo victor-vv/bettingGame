@@ -1,25 +1,20 @@
 package com.example.bettingGame.core.domain;
 
-import com.example.bettingGame.core.util.UserRole;
-import com.google.common.collect.ImmutableList;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Data @Builder
 @AllArgsConstructor @NoArgsConstructor
-@Entity
-@Table(name = "CUSTOM_USERS", schema = "BETTINGG")
+@Entity @ToString
+@Table(name = "AUTH_USERS", schema = "BETTINGG")
 public class User implements UserDetails {
 
     @Id
-    @SequenceGenerator(name = "USERS_SEQUENCE", sequenceName = "BETTINGG.CUSTOM_USERS_SEQ", allocationSize = 1)
-    @GeneratedValue(generator = "USERS_SEQUENCE")
+    @SequenceGenerator(name = "AUTH_USERS_SEQUENCE", sequenceName = "BETTINGG.AUTH_USERS_SEQ", allocationSize = 1)
+    @GeneratedValue(generator = "AUTH_USERS_SEQUENCE")
     @Column(name = "USER_ID", insertable = false, updatable = false)
     private Long id;
 
@@ -41,6 +36,11 @@ public class User implements UserDetails {
     @Column(name = "USER_ENABLED")
     private boolean enabled = true;
 
-    @Transient
-    private List<UserRole> authorities = ImmutableList.of(UserRole.USER);
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "AUTH_USER_ROLES", schema = "BETTINGG",
+            joinColumns = {@JoinColumn(name = "USER_ROLE_USER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "USER_ROLE_ROLE_ID")}
+    )
+    private Set<Role> authorities;
 }
