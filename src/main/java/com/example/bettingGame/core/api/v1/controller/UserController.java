@@ -25,13 +25,13 @@ public class UserController {
         return user.getUsername();
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully saved"),
-            @ApiResponse(code = 400, message = "Bad request")
-    })
-    public void createUser(@RequestBody UserDto userDto) {
-        userService.createUser(userDto);
-    }
+//    @PostMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 201, message = "Successfully saved"),
+//            @ApiResponse(code = 400, message = "Bad request")
+//    })
+//    public void createUser(@RequestBody UserDto userDto) {
+//        userService.createUser(userDto);
+//    }
 }

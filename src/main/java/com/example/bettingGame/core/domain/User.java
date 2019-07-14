@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data @Builder
@@ -18,11 +20,17 @@ public class User implements UserDetails {
     @Column(name = "USER_ID", insertable = false, updatable = false)
     private Long id;
 
+    @NotNull(message = "Username can not be empty")
     @Column(name = "USER_NAME", nullable = false)
     private String username;
 
+    @NotNull(message = "Password can not be empty")
     @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
+
+    @Email
+    @Column(name = "USER_EMAIL")
+    private String email;
 
     @Column(name = "USER_ACCOUNT_NON_EXPIRED")
     private boolean accountNonExpired = true;
