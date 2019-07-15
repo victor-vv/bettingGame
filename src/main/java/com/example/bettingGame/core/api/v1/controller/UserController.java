@@ -3,11 +3,12 @@ package com.example.bettingGame.core.api.v1.controller;
 import com.example.bettingGame.core.domain.User;
 import com.example.bettingGame.core.dto.UserDto;
 import com.example.bettingGame.core.service.UserService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -21,8 +22,8 @@ public class UserController {
 
     @GetMapping("/current")
     @ResponseStatus(HttpStatus.OK)
-    public String getCurrentUser(@AuthenticationPrincipal User user) {
-        return user.getUsername();
+    public UserDto getCurrentUser(@AuthenticationPrincipal User user) {
+        return new UserDto(user.getId(), user.getUsername());
     }
 
 //    @PostMapping

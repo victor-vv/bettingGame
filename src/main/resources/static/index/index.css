@@ -130,7 +130,14 @@ tr td:last-child {
     top:1px;
 }
 
-.select-row-custom-css{
+.row-custom-css{
     display: inline-block;
     position: relative;
+}
+
+.alignLeft {
+    float: left;
+}
+.alignRight {
+    float: right;
 }

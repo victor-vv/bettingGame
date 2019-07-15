@@ -1,26 +1,29 @@
+// $(document).ready(
+//     function() {
+//         $('#tourNumber').keyup(function(e){
+//             if(e.keyCode === 13) {
+//                 $('#fillTable').click();
+//                 return false;
+//             }
+//         });
+//     }
+// );
+var userId;
+
 $(document).ready(
-    function() {
-        $('#tourNumber').keyup(function(e){
-            if(e.keyCode === 13) {
-                $('#fillTable').click();
-                return false;
-            }
-        });
-    }
-);
-$(document).ready(
-    function() {
+    function bringCurrentUsername() {
         $.ajax({
             type: "GET",
-            url: "/v1/tours?tournamentId=1",
+            url: "/v1/users/current",
             success: function(data) {
-                helpers.buildSimpleIntegerDropdown(data, $('#tourNumber'), 'Выберите тур');
+                $("#username").html(data.username);
+                userId = data.id;
             }
         });
     }
 );
 $(document).ready(
-    function() {
+    function buildTournamentDropdown() {
         $.ajax({
             type: "GET",
             url: "/v1/tournaments",
@@ -31,19 +34,26 @@ $(document).ready(
     }
 );
 $(document).ready(
-    function() {
+    function buildTourDropdown() {
         $.ajax({
             type: "GET",
-            url: "/v1/users/current",
+            url: "/v1/tours?tournamentId=1",
             success: function(data) {
-                $("#username").html(data);
+                helpers.buildSimpleIntegerDropdown(data, $('#tourNumber'), 'Выберите тур');
             }
         });
     }
 );
 
+$(document).ready(
+    function prepareEverything() {
+        var gamesTable = $("#games_table");
+        gamesTable.find('tr#games_table_header').find("td:last").hide();
+    }
+);
+
 function fillGamesTable() {
-    var $gamesTable = $("#games_table");
+    var gamesTable = $("#games_table");
     var tourNumber = $("#tourNumber").val();
 
     function formatDate(date) {
@@ -82,7 +92,7 @@ function fillGamesTable() {
         type: "GET",
             success: function(data) {
                 //clearing the table
-                $gamesTable.find("tr:gt(0)").remove();
+                gamesTable.find("tr:gt(0)").remove();
                 if (data.length === 0) {
                     $('<tr>').append($('<td>').text("Нет доступных игр для введенных параметров")).appendTo('#games_table');
                     return;
@@ -100,12 +110,13 @@ function fillGamesTable() {
                         $('<td>').addClass('awayTeamBetCell').text(item.awayTeamBet === null ? "" : item.awayTeamBet).attr('contenteditable', 'true'),
                         $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore).attr('contenteditable', 'true'),
                         $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true'),
-                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true')
+                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true'),
+                        $('<td>').addClass('betChangingStatus').hide()
                     ).appendTo('#games_table');
                 })
             },
             failure: function() {
-                $gamesTable.find("tr:gt(0)").remove();
+                gamesTable.find("tr:gt(0)").remove();
                 //TODO:
             }
         }
@@ -115,6 +126,7 @@ function fillGamesTable() {
 
 function saveBets() {
     var gamesTable = $("#games_table");
+    gamesTable.find('tr#games_table_header').find("td:last").show();
     gamesTable.find('tr#games_table_line').each(function() {
         saveBet($(this)
 //                    , { Example of transferring thing on the up level
@@ -126,6 +138,36 @@ function saveBets() {
 //                    }
 //                }
         )
+    })
+}
+
+function saveBet(gameLine) {
+    var homeTeamScore = gameLine.find(".homeTeamBetCell").html();
+    var awayTeamScore = gameLine.find(".awayTeamBetCell").html();
+    if (!$.isNumeric(homeTeamScore) || !$.isNumeric(awayTeamScore)) {
+        gameLine.find('.betChangingStatus').html("Ставки введены некорректно").show();
+        return;
+    }
+    var betDto = {
+        "gameId": gameLine.find(".gameIdCell").html(),
+        "userId": userId,
+        "homeTeamScore": homeTeamScore,
+        "awayTeamScore": awayTeamScore
+    };
+    $.ajax({
+        type: "POST",
+        url: "v1/bets",
+        contentType: "application/json",
+        data: JSON.stringify(betDto),
+        success: function () {
+            debugger;
+            console.log("The bet was saved");
+            gameLine.find('.betChangingStatus').html("OK").show();
+        },
+        failure: function () {
+            console.log("Something went wrong, the bet was not saved, try again");
+            gameLine.find('.betChangingStatus').html("Что-то пошло не так, попробуйте еще раз").show();
+        }
     })
 }
 
@@ -142,7 +184,7 @@ function computePointsForGame(gameLine) {
     var homeTeamFinalScore = gameLine.find(".homeTeamScoreCell").html();
     var awayTeamFinalScore = gameLine.find(".awayTeamScoreCell").html();
     if (!$.isNumeric(homeTeamBetScore) || !$.isNumeric(awayTeamBetScore)) {
-        gameLine.append($('<td>').addClass('BetSaveMessage').text("Ставки введены некорректно"));
+        gameLine.find('.betChangingStatus').html("Ставки введены некорректно").show();
         return;
     }
     var pointsForGame = 0;
@@ -155,37 +197,10 @@ function computePointsForGame(gameLine) {
     } else if ((homeTeamFinalScore !== awayTeamFinalScore) && (betGoalsDif > 0 && finalScoreGoalsDif > 0) || (betGoalsDif < 0 && finalScoreGoalsDif < 0)) {
         pointsForGame = 2;
     }
-    $(gameLine ).append($('<td>').addClass('betPointsCell').text(pointsForGame));
+    $(gameLine ).find(".betPointsCell").html(pointsForGame);
 }
 
-function saveBet(gameLine) {
-    var homeTeamScore = gameLine.find(".homeTeamBetCell").html();
-    var awayTeamScore = gameLine.find(".awayTeamBetCell").html();
-    if (!$.isNumeric(homeTeamScore) || !$.isNumeric(awayTeamScore)) {
-        gameLine.append($('<td>').addClass('BetSaveMessage').text("Ставки введены некорректно"));
-        return;
-    }
-    var betDto = {
-        "gameId": gameLine.find(".gameIdCell").html(),
-        "userId": 1,
-        "homeTeamScore": homeTeamScore,
-        "awayTeamScore": awayTeamScore
-    };
-    $.ajax({
-        type: "POST",
-        url: "v1/bets",
-        contentType: "application/json",
-        data: JSON.stringify(betDto),
-        success: function () {
-            console.log("The bet was saved");
-            gameLine.append($('<td>').addClass('BetSaveStatusCell').text("OK"));
-        },
-        failure: function () {
-            console.log("Something went wrong, the bet was not saved, try again");
-            gameLine.append($('<td>').addClass('BetSaveMessage').text("Что-то пошло не так, попробуйте еще раз"));
-        }
-    })
-}
+
 
 function getTeamFromApi() {
     var id = $("#teamRequested").val();
