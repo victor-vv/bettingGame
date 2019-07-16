@@ -141,3 +141,7 @@ tr td:last-child {
 .alignRight {
     float: right;
 }
+
+.disabled {
+    opacity: 0.5;
+}

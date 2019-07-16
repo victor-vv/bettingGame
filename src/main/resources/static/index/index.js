@@ -45,16 +45,22 @@ $(document).ready(
     }
 );
 
+
 $(document).ready(
     function prepareEverything() {
+        // hide last column with the bet changing status
         var gamesTable = $("#games_table");
         gamesTable.find('tr#games_table_header').find("td:last").hide();
+
+        // disable buttons for saving bets and calculating points
+        disableBetsButtons();
     }
 );
 
 function fillGamesTable() {
     var gamesTable = $("#games_table");
     var tourNumber = $("#tourNumber").val();
+    disableBetsButtons();
 
     function formatDate(date) {
         date = new Date(date);
@@ -113,7 +119,8 @@ function fillGamesTable() {
                         $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true'),
                         $('<td>').addClass('betChangingStatus').hide()
                     ).appendTo('#games_table');
-                })
+                });
+                enableBetsButtons();
             },
             failure: function() {
                 gamesTable.find("tr:gt(0)").remove();
@@ -254,3 +261,13 @@ var helpers =
             }
         }
     };
+
+function disableBetsButtons() {
+    $("#saveBetsButton").prop('disabled', true).addClass('disabled');
+    $("#computePointsButton").prop('disabled', true).addClass('disabled');
+}
+
+function enableBetsButtons() {
+    $("#saveBetsButton").prop('disabled', false).removeClass('disabled');
+    $("#computePointsButton").prop('disabled', false).removeClass('disabled');
+}
