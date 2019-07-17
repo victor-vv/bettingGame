@@ -6,6 +6,7 @@ import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.domain.Tournament;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
+import com.example.bettingGame.core.dto.TourDto;
 import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
@@ -38,7 +39,7 @@ public class GameService {
     }
 
     @Transactional
-    public List<GameResponseDto> getGamesByTour(String tourNumber, long userId) {
+    public List<GameResponseDto> getGamesByTour(Long tourNumber, long userId) {
 
         List<Game> games = gameRepository.findByTour(tourNumber);
         return games.stream()
@@ -62,16 +63,6 @@ public class GameService {
                 .tourId(gameDto.getTour())
                 .build();
         gameRepository.save(game);
-    }
-
-    @Transactional
-    //TODO: перенести в правильный сервис и сделать правильно, без перебора всех игр
-    public List<Long> getTours(long tournamentId) {
-        List<Game> games = gameRepository.findByTournamentId(tournamentId);
-        return games.stream()
-                .map(Game::getTourId)
-                .distinct()
-                .collect(Collectors.toList());
     }
 
     private GameResponseDto convert(Game game, long userId) {

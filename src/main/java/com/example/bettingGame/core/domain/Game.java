@@ -45,7 +45,7 @@ public class Game {
     @Column(name = "GAME_FINISHED")
     private Boolean finished;
 
-    @Column(name = "GAME_TOUR_ID")
+    @Column(name = "GAME_TOUR_ID", insertable = false, updatable = false)
     private Long tourId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

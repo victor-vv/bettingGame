@@ -24,6 +24,7 @@ $(document).ready(
 );
 $(document).ready(
     function buildTournamentDropdown() {
+        $("#tourNumber").prop('disabled', true).addClass('disabled');
         $.ajax({
             type: "GET",
             url: "/v1/tournaments",
@@ -33,18 +34,6 @@ $(document).ready(
         });
     }
 );
-$(document).ready(
-    function buildTourDropdown() {
-        $.ajax({
-            type: "GET",
-            url: "/v1/tours?tournamentId=1",
-            success: function(data) {
-                helpers.buildSimpleIntegerDropdown(data, $('#tourNumber'), 'Выберите тур');
-            }
-        });
-    }
-);
-
 
 $(document).ready(
     function prepareEverything() {
@@ -54,10 +43,28 @@ $(document).ready(
 
         // disable buttons for saving bets and calculating points
         disableBetsButtons();
+
+        // add empty message for tour dropdown
+        $('#tourNumber').append('<option value="">' + "Выберите тур" + '</option>');
     }
 );
 
+function fillToursDropDown() {
+    debugger;
+    var tournamentDropdown = $('#tournamentId');
+    var tourDropdown = $('#tourNumber');
+    $.ajax({
+        type: "GET",
+        url: "/v1/tours?tournamentId=" + tournamentDropdown.find(":selected").val(),
+        success: function(data) {
+            helpers.buildTourDropdown(data, tourDropdown, 'Выберите тур');
+            tourDropdown.prop('disabled', false).removeClass('disabled');
+        }
+    });
+}
+
 function fillGamesTable() {
+
     var gamesTable = $("#games_table");
     var tourNumber = $("#tourNumber").val();
     disableBetsButtons();
@@ -231,7 +238,7 @@ function getTeamFromApi() {
 
 var helpers =
     {
-        buildSimpleIntegerDropdown: function(result, dropdown, emptyMessage)
+        buildTourDropdown: function(result, dropdown, emptyMessage)
         //TODO: переделать нормально
         {
             // Remove current options
@@ -242,7 +249,7 @@ var helpers =
             {
                 // Loop through each of the results and append the option to the dropdown
                 $.each(result, function(k, value) {
-                    dropdown.append('<option value="' + value + '">' + 'Тур ' + value + '</option>');
+                    dropdown.append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
             }
         },
