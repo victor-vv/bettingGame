@@ -16,7 +16,7 @@ public class GameDtoConverter implements Converter<Game, GameDto> {
                 .date(source.getDate())
                 .homeTeamId(source.getHomeTeamId())
                 .awayTeamId(source.getAwayTeamId())
-                .tour(source.getTour())
+                .tour(source.getTourId())
                 .build();
     }
 }

@@ -18,16 +18,6 @@ public class Game {
     @Column(name = "GAME_ID", insertable = false, updatable = false)
     private Long id;
 
-    @Column(name = "GAME_TOURNAMENT_ID", insertable = false, updatable = false)
-    private Long tournamentId;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "GAME_TOURNAMENT_ID")
-    private Tournament tournament;
-
-    @Column(name = "GAME_DATE")
-    private Date date;
-
     @Column(name = "GAME_HOME_TEAM_ID", insertable = false, updatable = false)
     private Long homeTeamId;
 
@@ -42,17 +32,32 @@ public class Game {
     @JoinColumn(name = "GAME_AWAY_TEAM_ID")
     private Team awayTeam;
 
-    @Column(name = "GAME_FINISHED")
-    private Boolean finished;
-
     @Column(name = "GAME_HOME_TEAM_SCORE")
     private Integer homeTeamScore;
 
     @Column(name = "GAME_AWAY_TEAM_SCORE")
     private Integer awayTeamScore;
 
+    @Column(name = "GAME_DATE")
+    private Date date;
+
+    //TODO: i don't think it's needed
+    @Column(name = "GAME_FINISHED")
+    private Boolean finished;
+
     @Column(name = "GAME_TOUR_ID")
-    private Long tour;
+    private Long tourId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "GAME_TOUR_ID")
+    private Tour tour;
+
+    @Column(name = "GAME_TOURNAMENT_ID", insertable = false, updatable = false)
+    private Long tournamentId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "GAME_TOURNAMENT_ID")
+    private Tournament tournament;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private Set<Bet> bets;

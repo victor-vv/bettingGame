@@ -38,7 +38,7 @@ public class GameService {
     }
 
     @Transactional
-    public List<GameResponseDto> getGamesByTour(long tourNumber, long userId) {
+    public List<GameResponseDto> getGamesByTour(String tourNumber, long userId) {
 
         List<Game> games = gameRepository.findByTour(tourNumber);
         return games.stream()
@@ -59,7 +59,7 @@ public class GameService {
                 .tournament(tournament)
                 .date(gameDto.getDate())
                 .finished(false)
-                .tour(gameDto.getTour())
+                .tourId(gameDto.getTour())
                 .build();
         gameRepository.save(game);
     }
@@ -69,7 +69,7 @@ public class GameService {
     public List<Long> getTours(long tournamentId) {
         List<Game> games = gameRepository.findByTournamentId(tournamentId);
         return games.stream()
-                .map(Game::getTour)
+                .map(Game::getTourId)
                 .distinct()
                 .collect(Collectors.toList());
     }

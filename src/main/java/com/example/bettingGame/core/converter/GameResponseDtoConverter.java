@@ -2,7 +2,6 @@ package com.example.bettingGame.core.converter;
 
 import com.example.bettingGame.core.domain.Game;
 import com.example.bettingGame.core.domain.Team;
-import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
 import com.example.bettingGame.core.dto.TeamDto;
 import org.springframework.core.convert.converter.Converter;
@@ -23,7 +22,7 @@ public class GameResponseDtoConverter implements Converter<Game, GameResponseDto
                 .homeTeam(buildTeamDto(source.getHomeTeam()))
                 .awayTeam(buildTeamDto(source.getAwayTeam()))
                 .finished(source.getFinished())
-                .tourNumber(source.getTour())
+                .tourNumber(source.getTourId())
                 .homeTeamScore(source.getHomeTeamScore())
                 .awayTeamScore(source.getAwayTeamScore())
                 .build();
