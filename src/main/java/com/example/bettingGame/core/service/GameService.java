@@ -53,11 +53,9 @@ public class GameService {
         // todo: logging ???
         Team homeTeam = teamRepository.findById(gameDto.getHomeTeamId()).orElseThrow(() -> new EntityNotFoundException("Home team does not exist"));
         Team awayTeam = teamRepository.findById(gameDto.getAwayTeamId()).orElseThrow(() -> new EntityNotFoundException("Away team does not exist"));
-        Tournament tournament = tournamentRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("Tournament does not exist"));
         Game game = Game.builder()
                 .homeTeam(homeTeam)
                 .awayTeam(awayTeam)
-                .tournament(tournament)
                 .date(gameDto.getDate())
                 .finished(false)
                 .tourId(gameDto.getTour())

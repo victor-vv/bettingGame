@@ -1,5 +1,6 @@
 package com.example.bettingGame.core.service;
 
+import com.example.bettingGame.core.domain.Tournament;
 import com.example.bettingGame.core.dto.TournamentDto;
 import com.example.bettingGame.core.repository.TournamentRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class TournamentService {
     @Transactional
     public List<TournamentDto> getAllEnabledTournaments() {
         return tournamentRepository.findAll().stream()
+                .filter(Tournament::getActive)
                 .map(tournament -> new TournamentDto(tournament.getId(), tournament.getName()))
                 .collect(Collectors.toList());
     }

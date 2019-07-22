@@ -13,7 +13,7 @@ public class GameResponseDto {
     private TeamDto homeTeam;
     private TeamDto awayTeam;
     private boolean finished;
-    private String tournament;
+    private TournamentDto tournament;
     private Long tourNumber;
     private Integer homeTeamScore;
     private Integer awayTeamScore;

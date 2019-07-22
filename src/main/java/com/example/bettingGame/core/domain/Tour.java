@@ -30,6 +30,13 @@ public class Tour {
     @Column(name = "TOUR_DATE_UNTIL")
     private Date dateUntil;
 
+    @Column(name = "TOUR_TOURNAMENT_ID", insertable = false, updatable = false)
+    private Long tournamentId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "TOUR_TOURNAMENT_ID")
+    private Tournament tournament;
+
     @OneToMany(mappedBy = "tour", fetch = FetchType.LAZY)
     private Set<Game> games;
 }

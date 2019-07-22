@@ -41,7 +41,6 @@ public class Game {
     @Column(name = "GAME_DATE")
     private Date date;
 
-    //TODO: i don't think it's needed
     @Column(name = "GAME_FINISHED")
     private Boolean finished;
 
@@ -51,13 +50,6 @@ public class Game {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "GAME_TOUR_ID")
     private Tour tour;
-
-    @Column(name = "GAME_TOURNAMENT_ID", insertable = false, updatable = false)
-    private Long tournamentId;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "GAME_TOURNAMENT_ID")
-    private Tournament tournament;
 
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private Set<Bet> bets;

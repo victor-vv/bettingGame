@@ -15,7 +15,7 @@ $(document).ready(
         $.ajax({
             type: "GET",
             url: "/v1/users/current",
-            success: function(data) {
+            success: function (data) {
                 $("#username").html(data.username);
                 userId = data.id;
             }
