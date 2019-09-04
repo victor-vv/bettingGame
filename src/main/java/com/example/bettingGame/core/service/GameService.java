@@ -3,10 +3,8 @@ package com.example.bettingGame.core.service;
 import com.example.bettingGame.core.domain.Bet;
 import com.example.bettingGame.core.domain.Game;
 import com.example.bettingGame.core.domain.Team;
-import com.example.bettingGame.core.domain.Tournament;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
-import com.example.bettingGame.core.dto.TourDto;
 import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
@@ -39,9 +37,9 @@ public class GameService {
     }
 
     @Transactional
-    public List<GameResponseDto> getGamesByTour(Long tourNumber, long userId) {
+    public List<GameResponseDto> getGamesByTour(Long tourId, long userId) {
 
-        List<Game> games = gameRepository.findByTour(tourNumber);
+        List<Game> games = gameRepository.findByTourId(tourId);
         return games.stream()
                 .map(game -> convert(game, userId))
                 .collect(Collectors.toList());
