@@ -19,6 +19,11 @@ public class MainController {
         return "adminka";
     }
 
+    @RequestMapping(value = "/userRanking")
+    public String userRankingPage() {
+        return "userRanking";
+    }
+
 //    @RequestMapping(value = "/sign-up")
 //    public String registrationPage() {
 //        return "registration";
