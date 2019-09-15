@@ -3,6 +3,7 @@ package com.example.bettingGame.core.api.v1.controller;
 import com.example.bettingGame.core.domain.User;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
+import com.example.bettingGame.core.dto.GameScoreDto;
 import com.example.bettingGame.core.service.GameService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -39,5 +40,10 @@ public class GameController {
     })
     public void createGame(@RequestBody GameDto gameDto) {
         gameService.createGame(gameDto);
+    }
+
+    @PatchMapping(value = "/score")
+    public void closeGame(@RequestBody GameScoreDto gameScoreDto ) {
+        gameService.addScore(gameScoreDto);
     }
 }

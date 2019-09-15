@@ -14,8 +14,8 @@ public class TournamentController {
 
     private TournamentService tournamentService;
 
-    public TournamentController(TournamentService gameService) {
-        this.tournamentService = gameService;
+    public TournamentController(TournamentService tournamentService) {
+        this.tournamentService = tournamentService;
     }
 
     @GetMapping

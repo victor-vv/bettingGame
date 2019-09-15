@@ -50,7 +50,6 @@ $(document).ready(
 );
 
 function fillToursDropDown() {
-    debugger;
     var tournamentDropdown = $('#tournamentId');
     var tourDropdown = $('#tourNumber');
     $.ajax({
@@ -174,7 +173,6 @@ function saveBet(gameLine) {
         contentType: "application/json",
         data: JSON.stringify(betDto),
         success: function () {
-            debugger;
             console.log("The bet was saved");
             gameLine.find('.betChangingStatus').html("OK").show();
         },

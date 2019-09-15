@@ -2,10 +2,7 @@ package com.example.bettingGame.core.api.v1.controller;
 
 import com.example.bettingGame.core.dto.TourDto;
 import com.example.bettingGame.core.service.TourService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +19,11 @@ public class TourController {
     @GetMapping
     public List<TourDto> getTours(@RequestParam long tournamentId) {
         return tourService.getTours(tournamentId);
+    }
+
+    @PutMapping(value = "/computed")
+    public void computeTour(@RequestParam long tourId) {
+        tourService.closeTour(tourId);
     }
 
 }

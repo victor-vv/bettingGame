@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface BetRepository extends BetRepositoryCustom, JpaRepository<Bet, Long> {
 
     Optional<Bet> findByGameIdAndUserId(long gameId, long userId);
+
+    List<Bet> findAllByGameId(long gameId);
 }

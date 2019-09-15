@@ -27,65 +27,44 @@
 <input type="button" id="create_game" value="Create game"
        onclick="helpers.createGame($('#home_team'), $('#away_team'), $('#tour_number'), $('#game_date'))"/>
 
-<script type="text/javascript">
-    $(document).ready(
-        function() {
-            $.ajax({
-                type: "GET",
-                url: "/v1/teams",
-                success: function(data) {
-                    helpers.buildDropdown(
-                        data,
-                        $('#home_team'),
-                        'Select an option'
-                    );
-                    helpers.buildDropdown(
-                        data,
-                        $('#away_team'),
-                        'Select an option'
-                    );
-                }
-            });
-        }
-    );
-    var helpers =
-        {
-            createGame: function(homeTeam, awayTeam, tourNumber, date) {
-                var homeTeamId = homeTeam.find(":selected").val();
-                var awayTeamId = awayTeam.find(":selected").val();
-                var tour = tourNumber.val();
-                var gameDate = date.val();
-                var gameDto = {
-                    "homeTeamId": homeTeamId,
-                    "awayTeamId": awayTeamId,
-                    "date": gameDate,
-                    "tour": tour
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "v1/games",
-                    contentType: 'application/json',
-                    data: JSON.stringify(gameDto),
-                    success: {},
-                    failure: {}
-                });
-            },
+<div style="margin-top: 10px">
+    <div class="row-custom-css">
+        <select class="select-custom-css" id="tournamentId" onchange="fillAdminToursDropDown()" style="width: 200px; margin-bottom: 5px;"></select>
+    </div>
+    <div class="row-custom-css">
+        <select class="select-custom-css" id="tourId" onchange="fillAdminGamesTable()" style="width: 200px; margin-bottom: 5px;"></select>
+    </div>
+</div>
 
-            buildDropdown: function(result, dropdown, emptyMessage)
-            {
-                // Remove current options
-                dropdown.html('');
-                // Add the empty option with the empty message
-                dropdown.append('<option value="">' + emptyMessage + '</option>');
-                if(result !== '')
-                {
-                    // Loop through each of the results and append the option to the dropdown
-                    $.each(result, function(k, v) {
-                        dropdown.append('<option value="' + v.id + '">' + v.name + '</option>');
-                    });
-                }
-            }
-        };
-    </script>
+<div>
+    <table style="margin-bottom: 10px;">
+        <tr style="vertical-align: top;">
+            <td>
+                <div>
+                    <table id="adminGamesTable" border="1">
+                        <tr id="adminGamesTable_header">
+                            <td style="display:none"></td>
+                            <td>Дата</td>
+                            <td style="display:none"></td>
+                            <td>Дома</td>
+                            <td style="display:none"></td>
+                            <td>В гостях</td>
+                            <td>Дома счет</td>
+                            <td>В гостях счет</td>
+                            <td>Статус</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <input type="button" id="closeTour" value="Close tour" onclick="computeTour($('#tourId').val())"/>
+</div>
+
+
+<script type="text/javascript" src="adminka/adminka.js"></script>
 </body>
 </html>

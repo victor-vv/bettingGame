@@ -5,10 +5,10 @@ import com.example.bettingGame.core.domain.Game;
 import com.example.bettingGame.core.domain.Team;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
+import com.example.bettingGame.core.dto.GameScoreDto;
 import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
-import com.example.bettingGame.core.repository.TournamentRepository;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,21 +23,23 @@ public class GameService {
     private GameRepository gameRepository;
     private TeamRepository teamRepository;
     private BetRepository betRepository;
-    private TournamentRepository tournamentRepository;
+    private BetService betService;
+    private UserScoreService userScoreService;
     private ConversionService conversionService;
 
     public GameService(GameRepository gameRepository, TeamRepository teamRepository,
-                       BetRepository betRepository, TournamentRepository tournamentRepository,
-                       ConversionService conversionService) {
+                       BetRepository betRepository,
+                       BetService betService, UserScoreService userScoreService, ConversionService conversionService) {
         this.gameRepository = gameRepository;
         this.teamRepository = teamRepository;
         this.betRepository = betRepository;
-        this.tournamentRepository = tournamentRepository;
+        this.betService = betService;
+        this.userScoreService = userScoreService;
         this.conversionService = conversionService;
     }
 
     @Transactional
-    public List<GameResponseDto> getGamesByTour(Long tourId, long userId) {
+    public List<GameResponseDto> getGamesByTour(long tourId, long userId) {
 
         List<Game> games = gameRepository.findByTourId(tourId);
         return games.stream()
@@ -59,6 +61,29 @@ public class GameService {
                 .tourId(gameDto.getTour())
                 .build();
         gameRepository.save(game);
+    }
+
+    @Transactional
+    public void addScore(GameScoreDto gameScoreDto) {
+        Game game = gameRepository.findById(gameScoreDto.getGameId()).orElseThrow(() -> new EntityNotFoundException("Game not found"));
+        game.setHomeTeamScore(gameScoreDto.getHomeTeamScore());
+        game.setAwayTeamScore(gameScoreDto.getAwayTeamScore());
+    }
+
+
+    public void closeGamesForTour(long tourId) {
+        List<Game> games = gameRepository.findByTourId(tourId);
+        games.forEach(game -> closeGame(game.getId()));
+    }
+
+    /**
+     * Checks all the bets for the given game, calculates and stores user scores
+     */
+    public void closeGame(long gameId) {
+        List<Bet> betsForGame = betService.getBetsForGame(gameId);
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game not found"));
+        betsForGame.forEach(bet -> userScoreService.closeBet(bet, game));
+
     }
 
     private GameResponseDto convert(Game game, long userId) {

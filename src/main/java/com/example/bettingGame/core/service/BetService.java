@@ -8,6 +8,7 @@ import com.example.bettingGame.core.repository.GameRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class BetService {
@@ -35,4 +36,12 @@ public class BetService {
         bet.setUserId(userId);
         betRepository.save(bet);
     }
+
+    public List<Bet> getBetsForGame(long gameId) {
+        return betRepository.findAllByGameId(gameId);
+    }
+
+//    public UserRankingResponseDto getUserScoresForTournament(long tournamentId) {
+//
+//    }
 }
