@@ -63,44 +63,14 @@ function fillToursDropDown() {
 }
 
 function fillGamesTable() {
+    const gamesTable = $("#games_table"),
+        tourId = $("#tourNumber").val();
 
-    var gamesTable = $("#games_table");
-    var tourNumber = $("#tourNumber").val();
     disableBetsButtons();
 
-    function formatDate(date) {
-        date = new Date(date);
-        var HH = date.getHours();
-        var MM = date.getMinutes();
-        var dd = date.getDate();
-        var mm = date.getMonth() + 1;
-        var yyyy = date.getFullYear();
-
-
-        if (MM < 10) {
-            MM = '0' + MM;
-        }
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-
-        var weekday = new Array(7);
-        weekday[0] = "ВС";
-        weekday[1] = "ПН";
-        weekday[2] = "ВТ";
-        weekday[3] = "СР";
-        weekday[4] = "ЧТ";
-        weekday[5] = "ПТ";
-        weekday[6] = "СБ";
-        var day = weekday[date.getDay()];
-        return dd+'/'+mm+'/'+yyyy+' - ' +HH+':'+MM+' ('+day+')';
-    }
-
+    //Building the games table
     $.ajax({
-        url: "v1/games?tourNumber=" + tourNumber,
+        url: "v1/games?tourNumber=" + tourId,
         type: "GET",
             success: function(data) {
                 //clearing the table
@@ -120,9 +90,9 @@ function fillGamesTable() {
                         $('<td>').addClass('awayTeamNameCell').text(item.awayTeam.name),
                         $('<td>').addClass('homeTeamBetCell').text(item.homeTeamBet === null ? "" : item.homeTeamBet).attr('contenteditable', 'true'),
                         $('<td>').addClass('awayTeamBetCell').text(item.awayTeamBet === null ? "" : item.awayTeamBet).attr('contenteditable', 'true'),
-                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore).attr('contenteditable', 'true'),
-                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true'),
-                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore).attr('contenteditable', 'true'),
+                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore),
+                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore),
+                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore),
                         $('<td>').addClass('betChangingStatus').hide()
                     ).appendTo('#games_table');
                 });
@@ -134,8 +104,43 @@ function fillGamesTable() {
             }
         }
     );
+
+    // Filling the other fields
+    $.ajax({
+        url: "v1/tours/" + tourId,
+        type: "GET",
+        success: function(data) {
+            // Filling deadline field
+            const formattedDeadline = formatDate(data.deadline);
+            $('#deadlineInput').val(formattedDeadline);
+            // Filling the tour status input
+            let tourStatus = "Открыт прием ставок";
+            if (new Date(data.deadline) < new Date() && new Date() < new Date(data.dateUntil)) {
+                tourStatus = "Прием ставок завершен";
+            } else if (new Date(data.dateUntil) < new Date()) {
+                tourStatus = "Закрыт";
+            }
+            const tourStatusInput = $('#tourStatusInput');
+            tourStatusInput.val(tourStatus);
+
+            // Disable bets editing if needed
+            if (tourStatus !== "Открыт прием ставок") {
+                const gamesTable = $("#games_table");
+                gamesTable.find('tr#games_table_line').each(function() {
+                    disableBetCells($(this))})
+            }
+        },
+        failure: function() {
+            $('#deadlineInput').val("N/A");
+        }
+    });
 }
 
+function disableBetCells(gameLine) {
+    debugger;
+    gameLine.find(".homeTeamBetCell").attr('contenteditable', 'false');
+    gameLine.find(".awayTeamBetCell").attr('contenteditable', 'false');
+}
 
 function saveBets() {
     var gamesTable = $("#games_table");
@@ -275,4 +280,35 @@ function disableBetsButtons() {
 function enableBetsButtons() {
     $("#saveBetsButton").prop('disabled', false).removeClass('disabled');
     $("#computePointsButton").prop('disabled', false).removeClass('disabled');
+}
+
+function formatDate(date) {
+    date = new Date(date);
+    var HH = date.getHours();
+    var MM = date.getMinutes();
+    var dd = date.getDate();
+    var mm = date.getMonth() + 1;
+    var yyyy = date.getFullYear();
+
+
+    if (MM < 10) {
+        MM = '0' + MM;
+    }
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+
+    var weekday = new Array(7);
+    weekday[0] = "ВС";
+    weekday[1] = "ПН";
+    weekday[2] = "ВТ";
+    weekday[3] = "СР";
+    weekday[4] = "ЧТ";
+    weekday[5] = "ПТ";
+    weekday[6] = "СБ";
+    var day = weekday[date.getDay()];
+    return dd+'/'+mm+'/'+yyyy+' - ' +HH+':'+MM+' ('+day+')';
 }

@@ -16,6 +16,11 @@ public class TourController {
         this.tourService = tourService;
     }
 
+    @GetMapping("/{tourId}")
+    public TourDto getTourDetails(@PathVariable long tourId) {
+        return tourService.getTourDetails(tourId);
+    }
+
     @GetMapping
     public List<TourDto> getTours(@RequestParam long tournamentId) {
         return tourService.getTours(tournamentId);

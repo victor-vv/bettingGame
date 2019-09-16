@@ -23,6 +23,12 @@ public class TourService {
         this.gameService = gameService;
     }
 
+
+    public TourDto getTourDetails(long tourId) {
+        Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new EntityNotFoundException("Tour not found"));
+        return conversionService.convert(tour, TourDto.class);
+    }
+
     public List<TourDto> getTours(long tournamentId) {
         List<Tour> tours = tourRepository.findAllByTournamentId(tournamentId);
         return tours.stream()

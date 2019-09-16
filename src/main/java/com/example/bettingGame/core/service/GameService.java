@@ -3,12 +3,14 @@ package com.example.bettingGame.core.service;
 import com.example.bettingGame.core.domain.Bet;
 import com.example.bettingGame.core.domain.Game;
 import com.example.bettingGame.core.domain.Team;
+import com.example.bettingGame.core.domain.Tour;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
 import com.example.bettingGame.core.dto.GameScoreDto;
 import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
+import com.example.bettingGame.core.repository.TourRepository;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,16 +23,18 @@ import java.util.stream.Collectors;
 public class GameService {
 
     private GameRepository gameRepository;
+    private TourRepository tourRepository;
     private TeamRepository teamRepository;
     private BetRepository betRepository;
     private BetService betService;
     private UserScoreService userScoreService;
     private ConversionService conversionService;
 
-    public GameService(GameRepository gameRepository, TeamRepository teamRepository,
+    public GameService(GameRepository gameRepository, TourRepository tourRepository, TeamRepository teamRepository,
                        BetRepository betRepository,
                        BetService betService, UserScoreService userScoreService, ConversionService conversionService) {
         this.gameRepository = gameRepository;
+        this.tourRepository = tourRepository;
         this.teamRepository = teamRepository;
         this.betRepository = betRepository;
         this.betService = betService;
@@ -53,12 +57,13 @@ public class GameService {
         // todo: logging ???
         Team homeTeam = teamRepository.findById(gameDto.getHomeTeamId()).orElseThrow(() -> new EntityNotFoundException("Home team does not exist"));
         Team awayTeam = teamRepository.findById(gameDto.getAwayTeamId()).orElseThrow(() -> new EntityNotFoundException("Away team does not exist"));
+        Tour tour = tourRepository.findById(gameDto.getTour()).orElseThrow(() -> new EntityNotFoundException("Tour not found"));
         Game game = Game.builder()
                 .homeTeam(homeTeam)
                 .awayTeam(awayTeam)
                 .date(gameDto.getDate())
                 .finished(false)
-                .tourId(gameDto.getTour())
+                .tour(tour)
                 .build();
         gameRepository.save(game);
     }
