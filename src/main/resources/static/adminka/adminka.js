@@ -47,7 +47,7 @@ function fillAdminToursDropDown() {
 
 function fillAdminGamesTable() {
 
-    var adminGamesTable = $("#games_table");
+    var adminGamesTable = $("#adminGamesTable");
     var tourId = $("#tourId").val();
 
     function formatDate(date) {
