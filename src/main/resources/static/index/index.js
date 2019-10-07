@@ -90,9 +90,9 @@ function fillGamesTable() {
                         $('<td>').addClass('awayTeamNameCell').text(item.awayTeam.name),
                         $('<td>').addClass('homeTeamBetCell').text(item.homeTeamBet === null ? "" : item.homeTeamBet).attr('contenteditable', 'true'),
                         $('<td>').addClass('awayTeamBetCell').text(item.awayTeamBet === null ? "" : item.awayTeamBet).attr('contenteditable', 'true'),
-                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "0" : item.homeTeamScore),
-                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore),
-                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "0" : item.awayTeamScore),
+                        $('<td>').addClass('homeTeamScoreCell').text(item.homeTeamScore === null ? "-" : item.homeTeamScore),
+                        $('<td>').addClass('awayTeamScoreCell').text(item.awayTeamScore === null ? "-" : item.awayTeamScore),
+                        $('<td>').addClass('betPointsCell').text(item.awayTeamScore === null ? "-" : item.awayTeamScore),
                         $('<td>').addClass('betChangingStatus').hide()
                     ).appendTo('#games_table');
                 });

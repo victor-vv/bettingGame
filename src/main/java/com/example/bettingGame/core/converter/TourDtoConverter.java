@@ -24,6 +24,7 @@ public class TourDtoConverter implements Converter<Tour, TourDto> {
                 .deadline(source.getDeadline())
                 .dateFrom(source.getDateFrom())
                 .dateUntil(source.getDateUntil())
+                .tournamentId(source.getTournamentId())
                 .build();
     }
 }

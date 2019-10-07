@@ -120,7 +120,7 @@ function closeGame(gameLine) {
         gameLine.find('.betChangingStatus').html("Ставки введены некорректно").show();
         return;
     }
-    var gameScoreDto = {
+    const gameScoreDto = {
         "gameId": gameLine.find(".gameIdCell").html(),
         "homeTeamScore": homeTeamScore,
         "awayTeamScore": awayTeamScore
@@ -150,7 +150,7 @@ function computeTour(tourId) {
 
     $.ajax({
         type: "PUT",
-        url: "v1/tours/computed?tourId=" + tourId,
+        url: "v1/tours/" + tourId + "/computed",
         contentType: 'application/json',
         success: function() {
             alert("The tour was computed and closed");

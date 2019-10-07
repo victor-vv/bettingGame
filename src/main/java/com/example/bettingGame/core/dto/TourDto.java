@@ -13,4 +13,5 @@ public class TourDto {
     private Date deadline;
     private Date dateFrom;
     private Date dateUntil;
+    private Long tournamentId;
 }

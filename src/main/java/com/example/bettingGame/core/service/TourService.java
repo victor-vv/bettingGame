@@ -5,6 +5,7 @@ import com.example.bettingGame.core.dto.TourDto;
 import com.example.bettingGame.core.repository.TourRepository;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -36,7 +37,14 @@ public class TourService {
                 .collect(Collectors.toList());
     }
 
-    public void closeTour(long tourId) {
+    @Transactional
+    public void closeGamesForTour(long tourId) {
         gameService.closeGamesForTour(tourId);
+    }
+
+    @Transactional
+    public void closeTourForSecondSystem (long tourId) {
+        TourDto tourDto = getTourDetails(tourId);
+        gameService.computeTourForSecondSystem(tourDto);
     }
 }

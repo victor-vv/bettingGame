@@ -7,6 +7,7 @@ import com.example.bettingGame.core.domain.Tour;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.GameResponseDto;
 import com.example.bettingGame.core.dto.GameScoreDto;
+import com.example.bettingGame.core.dto.TourDto;
 import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
 import com.example.bettingGame.core.repository.TeamRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +44,20 @@ public class GameService {
         this.conversionService = conversionService;
     }
 
+    public List<GameDto> getGamesByTour(long tourId) {
+        List<Game> games = gameRepository.findByTourId(tourId);
+        return games.stream()
+                .map(game -> conversionService.convert(game, GameDto.class))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
+    //TODO: rename it and maybe move to betService
     public List<GameResponseDto> getGamesByTour(long tourId, long userId) {
 
         List<Game> games = gameRepository.findByTourId(tourId);
         return games.stream()
+                .sorted(Comparator.comparing(Game::getDate))
                 .map(game -> convert(game, userId))
                 .collect(Collectors.toList());
     }
@@ -77,8 +88,16 @@ public class GameService {
 
 
     public void closeGamesForTour(long tourId) {
-        List<Game> games = gameRepository.findByTourId(tourId);
+        List<GameDto> games = getGamesByTour(tourId);
         games.forEach(game -> closeGame(game.getId()));
+
+    }
+
+    @Transactional
+    public void computeTourForSecondSystem(TourDto tourDto) {
+        Long tourId = tourDto.getId();
+        List<GameDto> games = getGamesByTour(tourId);
+        userScoreService.closeTour(tourDto, games);
     }
 
     /**

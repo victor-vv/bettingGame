@@ -7,5 +7,5 @@ import lombok.*;
 public class UserScoreBean {
 
     private long userId;
-    private Integer numberOfPoints;
+    private int numberOfPoints;
 }

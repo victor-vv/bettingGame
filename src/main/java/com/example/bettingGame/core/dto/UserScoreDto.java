@@ -8,5 +8,5 @@ public class UserScoreDto {
 
     private Long userId;
     private String username;
-    private Integer numberOfPoints;
+    private Double numberOfPoints;
 }
