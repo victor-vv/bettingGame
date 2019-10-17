@@ -12,7 +12,8 @@ $(document).ready(
 
 function buildUserRankingTable() {
     const tournamentId = $('#tournamentId').val(),
-        userRankingTable = $('#userRankingTable');
+        userRankingTable = $('#userRankingTable'),
+        userRankingTourTable = $('#userRankingTourTable');
 
     $.ajax({
         type: "GET",
@@ -35,6 +36,31 @@ function buildUserRankingTable() {
         },
         failure: function() {
             userRankingTable.find("tr:gt(0)").remove();
+        }
+    });
+
+    //TODO: два раза обращаюсь к таблицам через jquery, использовать переменные
+    $.ajax({
+        type: "GET",
+        url: "/v1/userRanking/tours?tournamentId=" + tournamentId,
+        success: function(data) {
+            //clearing the table
+            userRankingTourTable.find("tr:gt(0)").remove();
+            if (data.userScores.length === 0) {
+                $('<tr>').append($('<td>').text("Нет игроков")).appendTo('#userRankingTourTable');
+                return;
+            }
+            $.each(data.userScores, function(i, item) {
+                $('<tr id="games_table_line">').append(
+                    $('<td>').addClass('rankCell').text(i + 1),
+                    $('<td>').addClass('userIdCell').text(item.userId).hide(),
+                    $('<td>').addClass('userNameCell').text(item.username),
+                    $('<td>').addClass('numberOfPointsCell').text(item.numberOfPoints),
+                ).appendTo('#userRankingTourTable');
+            });
+        },
+        failure: function() {
+            userRankingTourTable.find("tr:gt(0)").remove();
         }
     });
 }

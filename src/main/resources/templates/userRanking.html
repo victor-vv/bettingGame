@@ -27,28 +27,42 @@
             <select class="select-custom-css" id="tournamentId" onchange="buildUserRankingTable()" style="width: 200px; margin-bottom: 5px;"></select>
         </div>
     </div>
-
-    <div>
-        <table style="margin-bottom: 10px;">
-            <tr style="vertical-align: top;">
-                <td>
-                    <div>
-                        <table id="userRankingTable" border="1">
-                            <tr id="userRankingTable_header">
-<!--                                <td style="display:none"></td>-->
-                                <td>Место</td>
-<!--                                <td style="display:none"></td>-->
-                                <td>Игрок</td>
-                                <td>Очков по системе 1</td>
-                                <td>Очков по системе 2</td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
+    <div class="row" style="clear: both">
+        <div class="row-custom-css" style="vertical-align: top">
+            <table style="margin-bottom: 10px;">
+                <tr style="vertical-align: top;">
+                    <td>
+                        <div>
+                            <table id="userRankingTable" border="1">
+                                <tr id="userRankingTable_header">
+                                    <td>Место</td>
+                                    <td>Игрок</td>
+                                    <td>Очков по системе 1</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="row-custom-css" style="vertical-align: top">
+            <table style="margin-bottom: 10px;">
+                <tr style="vertical-align: top;">
+                    <td>
+                        <div>
+                            <table id="userRankingTourTable" border="1">
+                                <tr id="userRankingTourTable_header">
+                                    <td>Место</td>
+                                    <td>Игрок</td>
+                                    <td>Очков по системе 2</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
-
 <script type="text/javascript" src="userRanking/userRanking.js"></script>
 </body>
 </html>

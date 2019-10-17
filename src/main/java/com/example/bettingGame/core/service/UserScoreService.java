@@ -2,6 +2,7 @@ package com.example.bettingGame.core.service;
 
 import com.example.bettingGame.core.domain.*;
 import com.example.bettingGame.core.domain.custom.UserScoreBean;
+import com.example.bettingGame.core.domain.custom.UserScoreTourBean;
 import com.example.bettingGame.core.dto.GameDto;
 import com.example.bettingGame.core.dto.TourDto;
 import com.example.bettingGame.core.dto.UserRankingResponseDto;
@@ -96,6 +97,7 @@ public class UserScoreService {
     }
 
     @Transactional
+    //TODO: убрать double и переделать в int (???)
     public UserRankingResponseDto getUserRankingForTournament(long tournamentId) {
         List<UserScoreBean> userScoresForTournament = userScoreRepository.getUserScoresForTournament(tournamentId);
 
@@ -112,6 +114,23 @@ public class UserScoreService {
         return new UserRankingResponseDto(tournamentId, summedPoints);
     }
 
+
+    @Transactional
+    public UserRankingResponseDto getUserRankingTourForTournament(long tournamentId) {
+        List<UserScoreTourBean> userScoresTourForTournament = userScoreTourRepository.getUserScoresTourForTournament(tournamentId);
+
+        Map<Long, Double> pointsForUser = userScoresTourForTournament.stream()
+                .collect(Collectors.groupingBy(UserScoreTourBean::getUserId, Collectors.summingDouble(UserScoreTourBean::getNumberOfPoints)));
+
+        List<UserScoreDto> summedPoints = pointsForUser
+                .keySet()
+                .stream()
+                .map(userId -> buildUserScoreDto(userId, pointsForUser.get(userId)))
+                .sorted(Comparator.comparingDouble(UserScoreDto::getNumberOfPoints).reversed())
+                .collect(Collectors.toList());
+
+        return new UserRankingResponseDto(tournamentId, summedPoints);
+    }
     private UserScoreDto buildUserScoreDto(long userId, Double numberOfPoints) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         return UserScoreDto.builder()

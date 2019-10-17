@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserScoreTourRepository extends JpaRepository<UserScoreTour, Long> {
+public interface UserScoreTourRepository extends UserScoreTourRepositoryCustom, JpaRepository<UserScoreTour, Long> {
 
 }

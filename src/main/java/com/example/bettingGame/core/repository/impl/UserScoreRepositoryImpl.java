@@ -3,16 +3,12 @@ package com.example.bettingGame.core.repository.impl;
 import com.example.bettingGame.core.domain.UserScore;
 import com.example.bettingGame.core.domain.custom.UserScoreBean;
 import com.example.bettingGame.core.repository.UserScoreRepositoryCustom;
-import com.example.bettingGame.core.util.ScoringSystem;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.bettingGame.core.util.ScoringSystem.TOTAL_POINTS;
 import static org.hibernate.criterion.Restrictions.eq;
 
 public class UserScoreRepositoryImpl extends AbstractRepositoryImpl implements UserScoreRepositoryCustom {

@@ -21,4 +21,9 @@ public class UserRankingController {
     public UserRankingResponseDto getUserRankingForTournament(@RequestParam long tournamentId) {
         return userScoreService.getUserRankingForTournament(tournamentId);
     }
+
+    @GetMapping(value = "/tours")
+    public UserRankingResponseDto getUserRankingTourForTournament(@RequestParam long tournamentId) {
+        return userScoreService.getUserRankingTourForTournament(tournamentId);
+    }
 }
