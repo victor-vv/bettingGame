@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface UserScoreTourRepository extends UserScoreTourRepositoryCustom, JpaRepository<UserScoreTour, Long> {
 
+    List<UserScoreTour> findAllByTourId(long tourId);
 }

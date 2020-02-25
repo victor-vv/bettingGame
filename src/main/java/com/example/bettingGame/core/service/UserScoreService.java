@@ -73,20 +73,28 @@ public class UserScoreService {
     }
 
     public void closeTour(TourDto tourDto, List<GameDto> games) {
-        log.debug("Closing tour <{}>", tourDto.getId());
+        Long tourId = tourDto.getId();
+        log.debug("Closing tour <{}>", tourId);
         Map<Long, Integer> pointsForUserId = games.stream()
                 .flatMap(game -> userScoreRepository.findByGameId(game.getId()).stream())
                 .collect(Collectors.groupingBy(UserScore::getUserId, Collectors.summingInt(UserScore::getNumberOfPoints)));
+        if (pointsForUserId.isEmpty()) {
+            log.debug("No bets for provided games are found");
+            return;
+        }
         int maxNumberOfPoints = pointsForUserId.values().stream().max(Comparator.naturalOrder()).get();
         List<Long> tourWinners = pointsForUserId.entrySet().stream()
                                     .filter(e -> e.getValue() == maxNumberOfPoints)
                                     .map(Map.Entry::getKey)
                                     .collect(Collectors.toList());
         Tour tour = Tour.builder()
-                .id(tourDto.getId())
+                .id(tourId)
                 .tournament(Tournament.builder().id(tourDto.getTournamentId()).build())
                 .build();
         double numberOfPoints = (tourWinners.size() == 1) ? 1D : 0.5D;
+        //TODO: this seems not to work
+        userScoreTourRepository.findAllByTourId(tourId).forEach(userScoreTour -> userScoreTourRepository.deleteById(userScoreTour.getId()));
+
         tourWinners.forEach(userId -> {
             userScoreTourRepository.save(UserScoreTour.builder()
                     .tour(tour)

@@ -113,6 +113,13 @@ function fillAdminGamesTable() {
     );
 }
 
+function saveTourResults() {
+    const gamesTable = $('#adminGamesTable');
+    gamesTable.find('tr#games_table_line').each(function() {
+        closeGame($(this))
+    });
+}
+
 function closeGame(gameLine) {
     const homeTeamScore = gameLine.find(".homeTeamScoreCell").html(),
         awayTeamScore = gameLine.find(".awayTeamScoreCell").html();
@@ -142,11 +149,6 @@ function closeGame(gameLine) {
 }
 
 function computeTour(tourId) {
-
-    const gamesTable = $('#adminGamesTable');
-    gamesTable.find('tr#games_table_line').each(function() {
-        closeGame($(this))
-    });
 
     $.ajax({
         type: "PUT",
