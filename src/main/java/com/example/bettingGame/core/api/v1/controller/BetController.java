@@ -23,6 +23,7 @@ public class BetController {
         this.betService = betService;
     }
 
+    @CrossOrigin
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {

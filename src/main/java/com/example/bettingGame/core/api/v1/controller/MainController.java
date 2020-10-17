@@ -24,6 +24,11 @@ public class MainController {
         return "userRanking";
     }
 
+    @RequestMapping(value = "/account")
+    public String profilePage() {
+        return "account";
+    }
+
 //    @RequestMapping(value = "/sign-up")
 //    public String registrationPage() {
 //        return "registration";

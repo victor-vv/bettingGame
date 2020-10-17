@@ -12,6 +12,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -61,5 +62,10 @@ public class UserService implements UserDetailsService {
 ////                            .authorities(ImmutableList.of(UserRole.USER))
 //                            .build();
         userRepository.save(user);
+    }
+
+    public void getUserById(long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+
     }
 }

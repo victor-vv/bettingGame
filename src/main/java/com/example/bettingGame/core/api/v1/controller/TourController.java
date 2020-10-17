@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/v1/tours")
 public class TourController {
@@ -24,6 +25,7 @@ public class TourController {
         return tourService.getTourDetails(tourId);
     }
 
+    @CrossOrigin
     @GetMapping
     public List<TourDto> getTours(@RequestParam long tournamentId) {
         return tourService.getTours(tournamentId);

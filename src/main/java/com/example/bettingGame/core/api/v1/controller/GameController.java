@@ -26,10 +26,13 @@ public class GameController {
         this.gameService = gameService;
     }
 
+    @CrossOrigin
     @GetMapping
-    public List<GameResponseDto> getGamesByTour(@AuthenticationPrincipal User user, @RequestParam long tourNumber) {
+    public List<GameResponseDto> getGamesByTour(
+//            @AuthenticationPrincipal User user,
+            @RequestParam long tourNumber) {
 /// TODO: Доделать поиск по турниру и туру, чтобы они сначала подгружались на экран, а потом по их айдишникам подгружались игры
-        return gameService.getGamesByTour(tourNumber, user.getId());
+        return gameService.getGamesByTour(tourNumber, 2);
     }
 
     @PostMapping

@@ -27,7 +27,8 @@ public class BetService {
         // todo: logging ???
         // todo: check that game is not finished (validator!)
         long gameId = betDto.getGameId();
-        long userId = betDto.getUserId();
+//        long userId = betDto.getUserId();
+        long userId = 2L;
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game doesn't exist"));
         Bet bet = betRepository.findByGameIdAndUserId(gameId, userId).orElse(new Bet());
         bet.setGame(game);
