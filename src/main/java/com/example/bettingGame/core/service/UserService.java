@@ -31,10 +31,10 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        Hibernate.initialize(userRepository.findByUsername(username));
+//        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         User existingUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        existingUser.setPassword(encoder.encode(existingUser.getPassword()));
+//        existingUser.setPassword(encoder.encode(existingUser.getPassword()));
+        existingUser.setPassword("{noop}"+existingUser.getPassword());
         return existingUser;
     }
 

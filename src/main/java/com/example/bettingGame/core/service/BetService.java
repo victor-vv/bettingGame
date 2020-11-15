@@ -2,6 +2,7 @@ package com.example.bettingGame.core.service;
 
 import com.example.bettingGame.core.domain.Bet;
 import com.example.bettingGame.core.domain.Game;
+import com.example.bettingGame.core.domain.User;
 import com.example.bettingGame.core.dto.BetDto;
 import com.example.bettingGame.core.repository.BetRepository;
 import com.example.bettingGame.core.repository.GameRepository;
@@ -23,12 +24,11 @@ public class BetService {
 
 
 
-    public void createBet(BetDto betDto) {
+    public void createBet(BetDto betDto, User user) {
         // todo: logging ???
         // todo: check that game is not finished (validator!)
         long gameId = betDto.getGameId();
-//        long userId = betDto.getUserId();
-        long userId = 2L;
+        long userId = user.getId();
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new EntityNotFoundException("Game doesn't exist"));
         Bet bet = betRepository.findByGameIdAndUserId(gameId, userId).orElse(new Bet());
         bet.setGame(game);
