@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+</head>
+<body>
+
+
+<div>
+    <label for="tour_number">Tour number</label>
+    <input type="text" id="tour_number" style="width: 40px;"/>
+</div>
+<div>
+    <label for="home_team">Home Team</label>
+    <select id="home_team" style="width: 100px"></select>
+    <label for="away_team">Away Team</label>
+    <select id="away_team" style="width: 100px"></select>
+</div>
+<div>
+    <label for="game_date">Date</label>
+    <input type="text" id="game_date" style="width: 250px;"/>
+    <!--<input type="date" id="game_date" style="width: 150px;"/>-->
+</div>
+<input type="button" id="create_game" value="Create game"
+       onclick="helpers.createGame($('#home_team'), $('#away_team'), $('#tour_number'), $('#game_date'))"/>
+
+<div style="margin-top: 10px">
+    <div class="row-custom-css">
+        <select class="select-custom-css" id="tournamentId" onchange="fillAdminToursDropDown()" style="width: 200px; margin-bottom: 5px;"></select>
+    </div>
+    <div class="row-custom-css">
+        <select class="select-custom-css" id="tourId" onchange="fillAdminGamesTable()" style="width: 200px; margin-bottom: 5px;"></select>
+    </div>
+</div>
+
+<div>
+    <table style="margin-bottom: 10px;">
+        <tr style="vertical-align: top;">
+            <td>
+                <div>
+                    <table id="adminGamesTable" border="1">
+                        <tr id="adminGamesTable_header">
+                            <td style="display:none"></td>
+                            <td>Дата</td>
+                            <td style="display:none"></td>
+                            <td>Дома</td>
+                            <td style="display:none"></td>
+                            <td>В гостях</td>
+                            <td>Дома счет</td>
+                            <td>В гостях счет</td>
+                            <td>Статус</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div>
+    <input type="button" id="saveResultsButton" value="Save results" onclick="saveTourResults()"/>
+</div>
+<div>
+    <input type="button" id="closeTourButton" value="Close tour" onclick="computeTour($('#tourId').val())"/>
+</div>
+
+
+<script type="text/javascript" src="adminka/adminka.js"></script>
+</body>
+</html>

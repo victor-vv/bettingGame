@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo Application</title>
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link type="text/css" href="index/index.css" rel="stylesheet">
+</head>
+<body style="margin-top: 0">
+    <div class="row" style="text-align: right; background-color: lightgrey; margin-bottom: 5px;">
+        <div class="row-custom-css, alignLeft" style="margin-right: 10px; margin-left: 5px; color: black">
+            <p><b><a href='/userRanking'>Турнирная таблица</a></b></p>
+        </div>
+        <div class="row-custom-css, alignRight">
+            <div class="row-custom-css" style="margin-right: 10px">
+<!--                <p><b><span id="username"></span></b></p>-->
+                <p><b><a id="username" href='/account'>Профиль</a></b></p> <!-- TODO! Открыть эту страницу с передачей пользователя-->
+            </div>
+            <div class="row-custom-css">
+                <input type="button" class="button-custom-css" id="logout" value="Выйти" onclick="location.href='/logout'" style="width: 100px"/>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="clear: both">
+        <div class="row-custom-css">
+            <select class="select-custom-css" id="tournamentId" onchange="fillToursDropDown()" style="width: 200px; margin-bottom: 5px;"></select>
+        </div>
+        <div class="row-custom-css">
+            <select class="select-custom-css" id="tourNumber" onchange="fillGamesTable()" style="width: 200px; margin-bottom: 5px;"></select>
+        </div>
+        <div class="row-custom-css" style="margin-left: 10px">
+            <p>Окончание приема ставок
+            <input type="text" id="deadlineInput" style="width: 200px; margin-left: 5px; margin-bottom: 5px; text-align: center" readonly/>
+        </div>
+        <div class="row-custom-css" style="margin-left: 10px">
+            <p>Статус тура
+            <input type="text" id="tourStatusInput" style="width: 200px; margin-left: 5px; margin-bottom: 5px; text-align: center" readonly/>
+        </div>
+
+    </div>
+    <div>
+        <table style="margin-bottom: 10px;">
+            <tr style="vertical-align: top;">
+                <td>
+                    <div>
+                        <table id="games_table" border="1">
+                            <tr id="games_table_header">
+                                <td style="display:none"></td>
+                                <td>Дата</td>
+                                <td style="display:none"></td>
+                                <td>Хозяева</td>
+                                <td style="display:none"></td>
+                                <td>Гости</td>
+                                <td>Хозяева ставка</td>
+                                <td>Гости ставка</td>
+                                <td>Хозяева счет</td>
+                                <td>Гости счет</td>
+                                <td>Очки</td>
+                                <td>Статус</td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="row-custom-css">
+            <input type="button" class="button-custom-css" id="saveBetsButton" value="Сохранить ставки" onclick="saveBets()" style="width: 200px"/>
+        </div>
+<!--        <div class="row-custom-css">-->
+<!--            <input type="button" class="button-custom-css" id="computePointsButton" value="Посчитать очки" onclick="computePoints()" style="width: 200px"/>-->
+<!--        </div>-->
+    </div>
+<script type="text/javascript" src="index/index.js"></script>
+</body>
+</html>
