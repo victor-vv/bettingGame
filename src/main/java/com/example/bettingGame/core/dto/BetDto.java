@@ -11,8 +11,6 @@ public class BetDto {
 
     @NotNull(message = "gameId can't be null")
     private Long gameId;
-    @NotNull(message = "userId can't be null")
-    private Long userId;
     @NotNull(message = "homeTeamScore can't be null")
     private Integer homeTeamScore;
     @NotNull(message = "awayTeamScore can't be null")
