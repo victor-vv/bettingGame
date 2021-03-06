@@ -2,15 +2,14 @@ package com.example.bettingGame.core.service;
 
 import com.example.bettingGame.core.domain.*;
 import com.example.bettingGame.core.domain.custom.UserScoreBean;
-import com.example.bettingGame.core.domain.custom.UserScoreTourBean;
-import com.example.bettingGame.core.dto.GameDto;
-import com.example.bettingGame.core.dto.TourDto;
-import com.example.bettingGame.core.dto.UserRankingResponseDto;
-import com.example.bettingGame.core.dto.UserScoreDto;
+import com.example.bettingGame.core.domain.custom.UserTourScoreBean;
+import com.example.bettingGame.core.dto.*;
 import com.example.bettingGame.core.repository.UserRepository;
 import com.example.bettingGame.core.repository.UserScoreRepository;
 import com.example.bettingGame.core.repository.UserScoreTourRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,17 +21,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserScoreService {
 
     private final UserScoreRepository userScoreRepository;
     private final UserRepository userRepository;
     private final UserScoreTourRepository userScoreTourRepository;
-
-    public UserScoreService(UserScoreRepository userScoreRepository, UserRepository userRepository, UserScoreTourRepository userScoreTourRepository) {
-        this.userScoreRepository = userScoreRepository;
-        this.userRepository = userRepository;
-        this.userScoreTourRepository = userScoreTourRepository;
-    }
+    private final ConversionService conversionService;
 
     /**
      *
@@ -106,16 +101,21 @@ public class UserScoreService {
 
     @Transactional
     //TODO: убрать double и переделать в int (???)
+    //TODO: make sure forgotten tours are also counted as ones with 0
     public UserRankingResponseDto getUserRankingForTournament(long tournamentId) {
         List<UserScoreBean> userScoresForTournament = userScoreRepository.getUserScoresForTournament(tournamentId);
 
         Map<Long, Double> pointsForUser = userScoresForTournament.stream()
                 .collect(Collectors.groupingBy(UserScoreBean::getUserId, Collectors.summingDouble(UserScoreBean::getNumberOfPoints)));
 
+        List<UserTourScoreBean> userTourScoresForTournament = userScoreRepository.getUserTourScoresForTournament(tournamentId);
+        Map<Long, List<UserTourScoreBean>> tourScoresByUserId = userTourScoresForTournament.stream()
+                .collect(Collectors.groupingBy(UserTourScoreBean::getUserId, Collectors.toList()));
+
         List<UserScoreDto> summedPoints = pointsForUser
                 .keySet()
                 .stream()
-                .map(userId -> buildUserScoreDto(userId, pointsForUser.get(userId)))
+                .map(userId -> buildUserScoreDto(userId, tourScoresByUserId.get(userId), pointsForUser.get(userId)))
                 .sorted(Comparator.comparingDouble(UserScoreDto::getNumberOfPoints).reversed())
                 .collect(Collectors.toList());
 
@@ -123,27 +123,33 @@ public class UserScoreService {
     }
 
 
-    @Transactional
-    public UserRankingResponseDto getUserRankingTourForTournament(long tournamentId) {
-        List<UserScoreTourBean> userScoresTourForTournament = userScoreTourRepository.getUserScoresTourForTournament(tournamentId);
+//    @Transactional
+//    public UserRankingResponseDto getUserRankingTourForTournament(long tournamentId) {
+//        List<UserScoreTourBean> userScoresTourForTournament = userScoreTourRepository.getUserScoresTourForTournament(tournamentId);
+//
+//        Map<Long, Double> pointsForUser = userScoresTourForTournament.stream()
+//                .collect(Collectors.groupingBy(UserScoreTourBean::getUserId, Collectors.summingDouble(UserScoreTourBean::getNumberOfPoints)));
+//
+//        List<UserScoreDto> summedPoints = pointsForUser
+//                .keySet()
+//                .stream()
+//                .map(userId -> buildUserScoreDto(userId, pointsForUser.get(userId)))
+//                .sorted(Comparator.comparingDouble(UserScoreDto::getNumberOfPoints).reversed())
+//                .collect(Collectors.toList());
+//
+//        return new UserRankingResponseDto(tournamentId, summedPoints);
+//    }
 
-        Map<Long, Double> pointsForUser = userScoresTourForTournament.stream()
-                .collect(Collectors.groupingBy(UserScoreTourBean::getUserId, Collectors.summingDouble(UserScoreTourBean::getNumberOfPoints)));
-
-        List<UserScoreDto> summedPoints = pointsForUser
-                .keySet()
-                .stream()
-                .map(userId -> buildUserScoreDto(userId, pointsForUser.get(userId)))
-                .sorted(Comparator.comparingDouble(UserScoreDto::getNumberOfPoints).reversed())
-                .collect(Collectors.toList());
-
-        return new UserRankingResponseDto(tournamentId, summedPoints);
-    }
-    private UserScoreDto buildUserScoreDto(long userId, Double numberOfPoints) {
+    private UserScoreDto buildUserScoreDto(long userId, List<UserTourScoreBean> tourScores, Double numberOfPoints) {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        List<TourScoreDto> tourScoresDtos = tourScores.stream()
+                .map(bean -> conversionService.convert(bean, TourScoreDto.class))
+                .sorted((tour1, tour2) -> tour2.getTourId().compareTo(tour1.getTourId()))
+                .collect(Collectors.toList());
         return UserScoreDto.builder()
                 .userId(userId)
                 .username(user.getUsername())
+                .tourPoints(tourScoresDtos)
                 .numberOfPoints(numberOfPoints)
                 .build();
     }
