@@ -2,28 +2,28 @@ package com.example.bettingGame.core.api.v1.controller;
 
 import com.example.bettingGame.core.dto.UserRankingResponseDto;
 import com.example.bettingGame.core.service.UserScoreService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/userRanking")
+@RequestMapping("/v1/userRankings")
 public class UserRankingController {
 
-    private UserScoreService userScoreService;
+    private final UserScoreService userScoreService;
 
     public UserRankingController(UserScoreService userScoreService) {
         this.userScoreService = userScoreService;
     }
 
-    @GetMapping
-    public UserRankingResponseDto getUserRankingForTournament(@RequestParam long tournamentId) {
+    @CrossOrigin
+    @GetMapping("/tournaments/{tournamentId}")
+    public UserRankingResponseDto getUserRankingForTournament(@PathVariable long tournamentId) {
         return userScoreService.getUserRankingForTournament(tournamentId);
     }
 
-    @GetMapping(value = "/tours")
-    public UserRankingResponseDto getUserRankingTourForTournament(@RequestParam long tournamentId) {
-        return userScoreService.getUserRankingTourForTournament(tournamentId);
-    }
+    //TODO: add medals in profiles
+
+//    @GetMapping(value = "/tours")
+//    public UserRankingResponseDto getUserRankingTourForTournament(@RequestParam long tournamentId) {
+//        return userScoreService.getUserRankingTourForTournament(tournamentId);
+//    }
 }
