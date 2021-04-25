@@ -24,9 +24,11 @@ public class UserScoreRepositoryImpl extends AbstractRepositoryImpl implements U
 
         Criteria criteria = getSession().createCriteria(UserScore.class, "userScore")
                 .createAlias("userScore.game", "game")
+                .createAlias("userScore.user", "user")
                 .createAlias("game.tour", "tour")
                 .createAlias("tour.tournament", "tournament")
-                .add(eq("tournament.id", tournamentId));
+                .add(eq("tournament.id", tournamentId))
+                .add(eq("user.enabled", true));
 
         criteria.setProjection(Projections.projectionList()
                 .add(Projections.property("userScore.userId"), "userId")
@@ -61,6 +63,7 @@ public class UserScoreRepositoryImpl extends AbstractRepositoryImpl implements U
         CriteriaQuery<UserTourScoreBean> criteriaQuery = builder.createQuery(UserTourScoreBean.class);
         Root<UserScore> userScore = criteriaQuery.from(UserScore.class);
         Join<UserScore, Game> game = userScore.join("game", JoinType.LEFT);
+        Join<UserScore, Game> user = userScore.join("user", JoinType.LEFT);
         Join<Game, Tour> tour = game.join("tour", JoinType.LEFT);
         Join<Tour, Tournament> tournament = tour.join("tournament", JoinType.LEFT);
 
@@ -71,7 +74,11 @@ public class UserScoreRepositoryImpl extends AbstractRepositoryImpl implements U
                     tour.get("name").alias("tourName"),
                     builder.sum(userScore.get("numberOfPoints")).alias("numberOfPoints")
                 )
-                .where(builder.equal(tournament.get("id"), tournamentId))
+                .where(builder.and(
+                        builder.equal(tournament.get("id"), tournamentId),
+                        builder.equal(user.get("enabled"), true)
+                       )
+                )
                 .groupBy(
                         userScore.get("userId"),
                         tour.get("id"),

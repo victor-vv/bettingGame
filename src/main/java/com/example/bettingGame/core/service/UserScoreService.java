@@ -31,8 +31,8 @@ public class UserScoreService {
 
     /**
      *
-     * @param bet
-     * @param game
+     * @param bet //TODO rework not to have a domain object in the parameters
+     * @param game //TODO rework not to have a domain object in the parameters
      */
     @Transactional
     public void closeBet(Bet bet, Game game) {
@@ -58,10 +58,11 @@ public class UserScoreService {
             pointsForGame = 2;
         }
         Long userId = bet.getUserId();
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found"));
         UserScore userScore = userScoreRepository.findByGameIdAndUserId(game.getId(), userId)
                 .orElse(UserScore.builder()
                             .game(game)
-                            .userId(userId)
+                            .user(user)
                             .build());
         userScore.setNumberOfPoints(pointsForGame);
         userScoreRepository.save(userScore);
@@ -101,7 +102,8 @@ public class UserScoreService {
 
     @Transactional
     //TODO: убрать double и переделать в int (???)
-    //TODO: make sure forgotten tours are also counted as ones with 0
+    //TODO: make sure forgotten tours are also counted as ones with -1
+    //TODO: переделать в один репо вызов
     public UserRankingResponseDto getUserRankingForTournament(long tournamentId) {
         List<UserScoreBean> userScoresForTournament = userScoreRepository.getUserScoresForTournament(tournamentId);
 
