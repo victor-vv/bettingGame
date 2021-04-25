@@ -39,6 +39,7 @@ public class TourService {
 
     @Transactional
     public void closeGamesForTour(long tourId) {
+        //TODO: fix the way games are calculated, including fines for missing bets
         gameService.closeGamesForTour(tourId);
     }
 

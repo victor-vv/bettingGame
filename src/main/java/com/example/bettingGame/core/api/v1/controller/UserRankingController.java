@@ -20,6 +20,8 @@ public class UserRankingController {
         return userScoreService.getUserRankingForTournament(tournamentId);
     }
 
+    //TODO: add medals in profiles
+
 //    @GetMapping(value = "/tours")
 //    public UserRankingResponseDto getUserRankingTourForTournament(@RequestParam long tournamentId) {
 //        return userScoreService.getUserRankingTourForTournament(tournamentId);
