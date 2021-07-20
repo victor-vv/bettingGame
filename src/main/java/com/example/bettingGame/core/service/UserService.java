@@ -28,9 +28,9 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
-
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
+        //TODO: figure out this password encoding thing
 //        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         User existingUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 //        existingUser.setPassword(encoder.encode(existingUser.getPassword()));
@@ -43,29 +43,17 @@ public class UserService implements UserDetailsService {
      * @param user
      */
     public void createUser(User user) {
-
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setEnabled(true);
         Role role = roleRepository.findByName("USER_ROLE").orElseThrow(() -> new UsernameNotFoundException("Role not found"));
         user.setAuthorities(new HashSet<Role>(Collections.singletonList(role)));
-
-
-//        User newUser = User.builder()
-//                            .username(userDto.getUsername())
-//                            .password(userDto.getPassword())
-//                            .accountNonExpired(true)
-//                            .accountNonLocked(true)
-//                            .credentialsNonExpired(true)
-//                            .enabled(true)
-////                            .authorities(ImmutableList.of(UserRole.USER))
-//                            .build();
         userRepository.save(user);
     }
 
-    public void getUserById(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
-
+    public void changePassword(String newPassword, User user) {
+        user.setPassword(newPassword);
+        userRepository.save(user);
     }
 }

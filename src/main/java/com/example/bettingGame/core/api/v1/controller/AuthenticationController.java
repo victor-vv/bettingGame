@@ -3,6 +3,7 @@ package com.example.bettingGame.core.api.v1.controller;
 import com.example.bettingGame.core.domain.User;
 import com.example.bettingGame.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -57,5 +58,11 @@ public class AuthenticationController {
     @PostMapping(value = "/register")
     public void registerUser(@RequestBody User user) {
         userService.createUser(user);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping(value = "/password")
+    public void changePassword(@RequestBody String newPassword, @AuthenticationPrincipal User user) {
+        userService.changePassword(newPassword, user);
     }
 }
